@@ -1,6 +1,7 @@
-## 뉴집스
+# 뉴집스
 
 - - -
+- 명령어는 git bash에서 실행
 
 (주의사항 : backend는 master, fronted는 main)
 
