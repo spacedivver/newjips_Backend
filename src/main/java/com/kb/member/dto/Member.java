@@ -16,12 +16,14 @@ import java.util.List;
 @Setter
 @Builder
 public class Member implements UserDetails {
-    private long mno;			// PK
-    private String id; 			// id=username
+    private long uno;			// userPK
+    private String userId; 		// userId=username
     private String password;	// password
     private String name;        // 사용자이름
+    private String nickname;    // 닉네임
+    private String gender;      // 성별
+    private String status = "Y"; 		// 활성화 여부, Y, N
     private String email;       // 이메일
-    private String status; 		// 활성화 여부, Y, N
     private Date createDate;    // 생성일
     private Date modifyDate;    // 수정일
 
@@ -45,11 +47,11 @@ public class Member implements UserDetails {
     }
 
     public String setUsername(String username) {
-        return this.id = username;
+        return this.userId = username;
     }
     @Override
     public String getUsername() {
-        return id;
+        return userId;
     }
     @Override
     public boolean isAccountNonExpired() {
@@ -71,7 +73,7 @@ public class Member implements UserDetails {
 
     public boolean checkRequiredValue(){
         try {
-            return (id.isEmpty() || password.isEmpty() || name.isEmpty() || email.isEmpty());
+            return (email.isEmpty() || password.isEmpty() || name.isEmpty());
         }catch (Exception e){
             return false;
         }

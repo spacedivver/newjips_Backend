@@ -33,10 +33,10 @@ public class MemberService{
 
 
     public Member login(Member member) {
-        Member saveMember = mapper.selectById(member.getId());
+        Member saveMember = mapper.selectById(member.getUserId());
         if(passwordEncoder.matches(member.getPassword(), saveMember.getPassword())) {
             saveMember.setPassword("");
-            saveMember.setMno(0);
+            saveMember.setUno(0);
             return saveMember;
         }else{
             return null;
@@ -82,31 +82,31 @@ public class MemberService{
         if(result != 1){
             throw new IllegalAccessException();
         }
-        Auth auth = new Auth(member.getId(), "ROLE_MEMBER");
-        result = mapper.insertAuth(auth);
-        if(result != 1){
-            throw new IllegalAccessException();
-        }
+        Auth auth = new Auth(member.getUserId(), "ROLE_MEMBER");
+//        result = mapper.insertAuth(auth);
+//        if(result != 1){
+//            throw new IllegalAccessException();
+//        }
         saveAvatar(avatar, member.getUsername());
-        return mapper.selectById(member.getId());
+        return mapper.selectById(member.getUserId());
     }
 
     public Member update(Member updateMember, MultipartFile avatar) throws IllegalAccessException {
-        Member oldMember = mapper.selectById(updateMember.getId());
+        Member oldMember = mapper.selectById(updateMember.getUserId());
         if(!passwordEncoder.matches(updateMember.getPassword(),oldMember.getPassword())) {
             throw new PasswordMissmatchException();
         }
-        updateMember.setMno(oldMember.getMno());
+        updateMember.setUno(oldMember.getUno());
         mapper.updateMember(updateMember);
         if(avatar != null && !avatar.isEmpty()) {
-            saveAvatar(avatar, oldMember.getId());
+            saveAvatar(avatar, oldMember.getUserId());
         }
-        return mapper.selectById(updateMember.getId());
+        return mapper.selectById(updateMember.getUserId());
     }
 
     public Member delete(String id) {
         Member member = mapper.selectById(id);
-        mapper.deleteMember(member.getMno());
+        mapper.deleteMember(member.getUno());
         return member;
     }
 
