@@ -42,10 +42,10 @@ public class MemberController {
 
     @GetMapping("/{id}/avatar")
     public void getAvatar(@PathVariable String id, HttpServletResponse response) {
-        String avatarPath =  LOCATION + "/avatar/" + id + ".png";
+        String avatarPath = LOCATION + "/avatar/" + id + ".png";
         File file = new File(avatarPath);
         if (!file.exists()) {
-            file = new File( LOCATION + "/avatar/unknown.png");
+            file = new File(LOCATION + "/avatar/unknown.png");
         }
         UploadFiles.downloadImage(response, file);
     }
@@ -54,8 +54,26 @@ public class MemberController {
     @PostMapping("")
     public ResponseEntity<Member> join(MemberDTO memberDTO,
                                        @RequestParam(name = "avatar", required = false) MultipartFile avatar) throws IllegalAccessException {
-        Member member = memberDTO.toMember();
-        return ResponseEntity.ok(service.join(member, avatar));
+        try {
+            Member member = memberDTO.toMember();
+
+            // 성별 초기화
+            if (member.getGender() == null || member.getGender().isEmpty()) {
+                member.setGender("M"); // 기본값으로 남성 설정
+            }
+
+            // 닉네임 기본값 설정
+            if (member.getNickname() == null || member.getNickname().isEmpty()) {
+                member.setNickname("Guest"); // 기본값 설정
+            }
+
+            Member createdMember = service.join(member, avatar);
+            return ResponseEntity.status(201).body(createdMember);
+        } catch (IllegalAccessException e) {
+            log.error("회원 가입 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.badRequest().build(); // 적절한 오류 코드 반환
+        }
+//        return ResponseEntity.ok(service.join(member, avatar));
     }
 
     @PutMapping("/{id}/changepassword")
