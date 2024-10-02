@@ -39,6 +39,11 @@ public class JwtUsernamePasswordAuthenticationFilter extends UsernamePasswordAut
         // 요청 BODY의 JSON에서 id, password  LoginDTO
         LoginDTO login = LoginDTO.of(request);
 
+        // 아이디와 비밀번호가 비어있지 않은지 검증
+        if (login.getUserId() == null || login.getPassword() == null) {
+            throw new AuthenticationException("아이디 또는 비밀번호가 비어 있습니다.") {};
+        }
+
         // 인증 토큰(UsernamePasswordAuthenticationToken) 구성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(login.getUserId(), login.getPassword());

@@ -73,7 +73,7 @@ public class Member implements UserDetails {
 
     public boolean checkRequiredValue(){
         try {
-            return (email.isEmpty() || password.isEmpty() || name.isEmpty());
+            return (userId.isEmpty() || password.isEmpty());
         }catch (Exception e){
             return false;
         }

@@ -35,17 +35,17 @@ public class MemberService{
     public Member login(Member member) {
         Member saveMember = mapper.selectById(member.getUserId());
         if(passwordEncoder.matches(member.getPassword(), saveMember.getPassword())) {
-            saveMember.setPassword("");
-            saveMember.setUno(0);
+            saveMember.setPassword(""); //비밀번호 제거
+            saveMember.setUno(0); //회원 번호 초기화
             return saveMember;
         }else{
-            return null;
+            return null; //인증 실패
         }
     }
 
     public boolean checkDuplicate(String id) {
         Member member = mapper.selectById(id);
-        return member != null;
+        return member != null; //중복 확인
     }
 
     public Member getMember(String id) {
@@ -58,16 +58,16 @@ public class MemberService{
         if(avatar != null && !avatar.isEmpty()) {
             File dir = new File(LOCATION + "/avatar");
             if(!dir.exists()){
-                dir.mkdirs();
+                dir.mkdirs(); //디렉토리 생성
             }
             File dest = new File( LOCATION + "/avatar", id + ".png");
             if(!dest.exists()){
-                dest.delete();
+                dest.delete(); //기존 파일 삭제
             }
             try {
-                avatar.transferTo(dest);
+                avatar.transferTo(dest); //파일 전송
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new RuntimeException(e); //예외 처리
             }
         }
     }
@@ -75,19 +75,20 @@ public class MemberService{
     @Transactional(rollbackFor = Exception.class)
     public Member join(Member member, MultipartFile avatar) throws IllegalAccessException {
         if(member.checkRequiredValue()){
-            throw new IllegalAccessException();
+            throw new IllegalAccessException("필수 값이 누락되었습니다."); //예외 처리
         }
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setPassword(passwordEncoder.encode(member.getPassword())); //비밀번호 암호화
         int result = mapper.insertMember(member);
         if(result != 1){
-            throw new IllegalAccessException();
+            throw new IllegalAccessException("회원 가입에 실패했습니다."); //예외 처리
         }
         Auth auth = new Auth(member.getUserId(), "ROLE_MEMBER");
+        //인증 정보 추가 코드 필요
 //        result = mapper.insertAuth(auth);
 //        if(result != 1){
 //            throw new IllegalAccessException();
 //        }
-        saveAvatar(avatar, member.getUsername());
+        saveAvatar(avatar, member.getUserId()); //아바타 저장
         return mapper.selectById(member.getUserId());
     }
 
