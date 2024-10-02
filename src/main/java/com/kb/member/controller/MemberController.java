@@ -63,6 +63,7 @@ public class MemberController {
             }
 
             // 닉네임 기본값 설정
+            // 닉네임 없거나 빈 문자열(사용자가 닉네임을 제공했지만 빈 문자열을 입력한 경우)일 경우
             if (member.getNickname() == null || member.getNickname().isEmpty()) {
                 member.setNickname("Guest"); // 기본값 설정
             }
@@ -75,6 +76,7 @@ public class MemberController {
         }
 //        return ResponseEntity.ok(service.join(member, avatar));
     }
+
 
     @PutMapping("/{id}/changepassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePassword) {

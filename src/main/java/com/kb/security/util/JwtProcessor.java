@@ -12,9 +12,9 @@ import java.util.Date;
 
 @Component
 public class JwtProcessor {
-    static private final long TOKEN_VALID_MILISECOND = 1000L * 60 * 60 * 2; // 5 분
+    static private final long TOKEN_VALID_MILLISECONDS = 1000L * 60 * 60 * 2; // 2시간
 
-    private String secretKey = "충분히 긴 임의의(랜덤한) 비밀키 문자열 배정 ";
+    private String secretKey = " Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. ";
     private Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
     //    private Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);  -- 운영시 사용
@@ -23,7 +23,7 @@ public class JwtProcessor {
         return Jwts.builder()
                 .setSubject(subject)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILISECOND))
+                .setExpiration(new Date(new Date().getTime() + TOKEN_VALID_MILLISECONDS))
                 .signWith(key)
                 .compact();
     }

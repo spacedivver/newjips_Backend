@@ -15,6 +15,7 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
+@Builder // Builder 패턴을 사용하려면 이 애너테이션을 추가합니다.
 public class MemberDTO {
     private Long uno;          // Primary Key
     private String userId; 		// id=username
