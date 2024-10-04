@@ -1,4 +1,4 @@
-package com.kb.buddiz.dto;
+package com.kb.buddizintro.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
-public class BuddizDTO {
+public class BuddizIntroDTO {
     private Integer uno; // Unique number for identification
     private Integer liveInKr;
     private String character;

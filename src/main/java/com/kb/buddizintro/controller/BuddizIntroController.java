@@ -1,7 +1,7 @@
-package com.kb.buddiz.controller;
+package com.kb.buddizintro.controller;
 
-import com.kb.buddiz.dto.BuddizDTO;
-import com.kb.buddiz.service.BuddizService;
+import com.kb.buddizintro.dto.BuddizIntroDTO;
+import com.kb.buddizintro.service.BuddizIntroService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,27 +9,27 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/buddiz")
-public class BuddizController {
+public class BuddizIntroController {
 
-    private final BuddizService buddizService;
+    private final BuddizIntroService buddizService;
 
     @Autowired
-    public BuddizController(BuddizService buddizService) {
+    public BuddizIntroController(BuddizIntroService buddizService) {
         this.buddizService = buddizService;
     }
 
     @GetMapping("/intro") // Endpoint to get all Buddiz introductions
-    public List<BuddizDTO> getAllBuddizIntro() {
+    public List<BuddizIntroDTO> getAllBuddizIntro() {
         return buddizService.getAllBuddizIntro();
     }
 
     @GetMapping("/intro/{uno}") // Get Buddiz intro by unique number
-    public BuddizDTO getBuddizIntro(@PathVariable Integer uno) {
+    public BuddizIntroDTO getBuddizIntro(@PathVariable Integer uno) {
         return buddizService.getBuddizIntro(uno);
     }
 
     @PutMapping("/intro/update")
-    public String updateBuddizIntro(@RequestBody BuddizDTO buddizDTO) {
+    public String updateBuddizIntro(@RequestBody BuddizIntroDTO buddizDTO) {
         buddizService.updateBuddizIntro(buddizDTO);
         return "Buddiz Introduction updated successfully";
     }

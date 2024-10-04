@@ -2,6 +2,7 @@ package com.kb.loan.controller;
 
 import com.kb.loan.dto.LoanDTO;
 import com.kb.loan.service.LoanService;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
