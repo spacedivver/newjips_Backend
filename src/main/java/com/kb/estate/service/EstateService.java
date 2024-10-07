@@ -2,6 +2,7 @@ package com.kb.estate.service;
 
 import com.kb.estate.dto.EstateDTO;
 import com.kb.estate.dto.EstateDetailDTO;
+import com.kb.estate.dto.EstateParam;
 import com.kb.estate.mapper.EstateMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,4 +28,9 @@ public class EstateService {
     public EstateDetailDTO getEstateDetail(Long eno) {
         return estateMapper.getEstateDetail(eno);
     }
+
+    public List<EstateDTO> getEstateByLocation(EstateParam estateParam) {
+        return estateMapper.getEstateByLocation(estateParam.getLatitude(), estateParam.getLongitude());
+    }
+
 }
