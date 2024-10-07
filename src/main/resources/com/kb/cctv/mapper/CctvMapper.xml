@@ -24,7 +24,7 @@
                  FROM cctv
              ) AS subquery
         WHERE distance < 1
-        ORDER BY cid;
+        ORDER BY distance;
         ]]>
 </select>
 
