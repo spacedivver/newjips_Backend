@@ -9,9 +9,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/loan")
-@CrossOrigin(origins = "http://localhost:5173") // Enable CORS for this controller
+@CrossOrigin(origins = "http://localhost:5173") // Allow frontend access
 public class LoanController {
-
     private final LoanService loanService;
 
     @Autowired
@@ -19,13 +18,13 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    // API to get the list of loans
+    // Get all loans
     @GetMapping("/list")
     public List<LoanDTO> getLoanList() {
         return loanService.getLoanList();
     }
 
-    // API to get the loan details by lno
+    // Get loan by ID
     @GetMapping("/detail/{lno}")
     public LoanDTO getLoanDetail(@PathVariable("lno") Long lno) {
         return loanService.getLoanDetail(lno);
