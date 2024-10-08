@@ -7,7 +7,7 @@
 
     <!-- Query to get all loans -->
     <select id="getLoanList" resultType="com.kb.loan.dto.LoanDTO">
-        SELECT lno, bank, title, subtitle
+        SELECT lno, bank, title, subtitle,interest
         FROM Loan
     </select>
 

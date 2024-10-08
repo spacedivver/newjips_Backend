@@ -7,13 +7,13 @@
 
     <!-- Query to get all Buddiz introductions -->
     <select id="getAllBuddizIntro" resultType="com.kb.buddizintro.dto.BuddizIntroDTO">
-        SELECT liveInKr, `character`, cost, hiredTimes, rating, selfInfo, lan, reviewcnt
+        SELECT uno, liveInKr, personality, cost, hiredTimes, rating, selfInfo, lan, useLan
         FROM UserBuddiz
     </select>
 
     <!-- Query to get Buddiz introduction by unique number -->
     <select id="getBuddizIntro" parameterType="Integer" resultType="com.kb.buddizintro.dto.BuddizIntroDTO">
-        SELECT liveInKr, `character`, cost, hiredTimes, rating, selfInfo, lan, reviewcnt
+        SELECT uno, liveInKr, personality, cost, hiredTimes, rating, selfInfo, lan, useLan
         FROM UserBuddiz
         WHERE uno = #{uno}
     </select>
@@ -21,7 +21,8 @@
     <!-- Query to update Buddiz introduction -->
     <update id="updateBuddizIntro" parameterType="com.kb.buddizintro.dto.BuddizIntroDTO">
         UPDATE UserBuddiz
-        SET selfInfo = #{selfInfo}
+        SET selfInfo = #{selfInfo}, personality = #{personality}, cost = #{cost}, hiredTimes = #{hiredTimes},
+            rating = #{rating}, lan = #{lan}, useLan = #{useLan}
         WHERE uno = #{uno}
     </update>
 

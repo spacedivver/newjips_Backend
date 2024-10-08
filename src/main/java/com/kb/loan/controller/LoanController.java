@@ -2,7 +2,6 @@ package com.kb.loan.controller;
 
 import com.kb.loan.dto.LoanDTO;
 import com.kb.loan.service.LoanService;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,6 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/loan")
+@CrossOrigin(origins = "http://localhost:5173") // Enable CORS for this controller
 public class LoanController {
 
     private final LoanService loanService;
@@ -29,6 +29,5 @@ public class LoanController {
     @GetMapping("/detail/{lno}")
     public LoanDTO getLoanDetail(@PathVariable("lno") Long lno) {
         return loanService.getLoanDetail(lno);
-
     }
 }
