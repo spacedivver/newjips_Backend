@@ -43,24 +43,24 @@ public class MemberService{
         }
     }
 
-    public boolean checkDuplicate(String id) {
-        Member member = mapper.selectById(id);
+    public boolean checkDuplicate(String userId) {
+        Member member = mapper.selectById(userId);
         return member != null; //중복 확인
     }
 
-    public Member getMember(String id) {
-        return Optional.ofNullable(mapper.selectById(id))
+    public Member getMember(String userId) {
+        return Optional.ofNullable(mapper.selectById(userId))
                         .orElseThrow(NoSuchElementException::new);
     }
 
-    private void saveAvatar(MultipartFile avatar, String id) {
+    private void saveAvatar(MultipartFile avatar, String userId) {
         //아바타 업로드
         if(avatar != null && !avatar.isEmpty()) {
             File dir = new File(LOCATION + "/avatar");
             if(!dir.exists()){
                 dir.mkdirs(); //디렉토리 생성
             }
-            File dest = new File( LOCATION + "/avatar", id + ".png");
+            File dest = new File( LOCATION + "/avatar", userId + ".png");
             if(!dest.exists()){
                 dest.delete(); //기존 파일 삭제
             }
@@ -105,14 +105,14 @@ public class MemberService{
         return mapper.selectById(updateMember.getUserId());
     }
 
-    public Member delete(String id) {
-        Member member = mapper.selectById(id);
+    public Member delete(String userId) {
+        Member member = mapper.selectById(userId);
         mapper.deleteMember(member.getUno());
         return member;
     }
 
     public void changePassword(ChangePasswordDTO changePassword) {
-        Member member = mapper.selectById(changePassword.getId());
+        Member member = mapper.selectById(changePassword.getUserId());
 //        System.out.println(changePassword);
         if(!passwordEncoder.matches(
                 changePassword.getOldPassword(),

@@ -30,22 +30,23 @@ public class MemberController {
 
     private final MemberService service;
 
-    @GetMapping("/checkid/{id}")
-    public ResponseEntity<Boolean> checkDuplicate(@PathVariable String id) {
-        return ResponseEntity.ok().body(service.checkDuplicate(id));
+    @GetMapping("/checkid/{userId}")
+    public ResponseEntity<Boolean> checkDuplicate(@PathVariable String userId) {
+        return ResponseEntity.ok().body(service.checkDuplicate(userId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Member> get(@PathVariable String id) {
-        return ResponseEntity.ok(service.getMember(id));
+    @GetMapping("/{userId}")
+    public ResponseEntity<Member> get(@PathVariable String userId) {
+        Member member = service.getMember(userId);
+        return ResponseEntity.ok(member);
     }
 
-    @GetMapping("/{id}/avatar")
-    public void getAvatar(@PathVariable String id, HttpServletResponse response) {
-        String avatarPath = LOCATION + "/avatar/" + id + ".png";
+    @GetMapping("/{userId}/avatar")
+    public void getAvatar(@PathVariable String userId, HttpServletResponse response) {
+        String avatarPath = LOCATION + "/avatar/" + userId + ".png";
         File file = new File(avatarPath);
         if (!file.exists()) {
-            file = new File(LOCATION + "/avatar/unknown.png");
+            file = new File( LOCATION + "/avatar/unknown.png"); //기본 이미지 설정
         }
         UploadFiles.downloadImage(response, file);
     }
@@ -68,6 +69,12 @@ public class MemberController {
                 member.setNickname("Guest"); // 기본값 설정
             }
 
+            member.setProfilePic("/avatar/unknown.png"); // 기본 이미지
+            if (avatar != null && !avatar.isEmpty()) {
+                // 업로드된 이미지 처리 로직
+                // 예: member.setProfilePic("/avatar/" + savedImageName);
+            }
+
             Member createdMember = service.join(member, avatar);
             return ResponseEntity.status(201).body(createdMember);
         } catch (IllegalAccessException e) {
@@ -78,21 +85,21 @@ public class MemberController {
     }
 
 
-    @PutMapping("/{id}/changepassword")
+    @PutMapping("/{userId}/changepassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePassword) {
         service.changePassword(changePassword);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{userId}")
     public ResponseEntity<Member> changeProfile(MemberDTO memberDTO,
                 @RequestParam(name = "avatar", required = false) MultipartFile avatar) throws IllegalAccessException {
         Member member = memberDTO.toMember();
         return ResponseEntity.ok(service.update(member, avatar));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Member> delete(@PathVariable String id) {
-        return ResponseEntity.ok(service.delete(id));
+    @DeleteMapping("/{userId}")
+    public ResponseEntity<Member> delete(@PathVariable String userId) {
+        return ResponseEntity.ok(service.delete(userId));
     }
 }

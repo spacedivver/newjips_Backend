@@ -24,8 +24,10 @@ public class Member implements UserDetails {
     private String gender;      // 성별
     private String status = "Y"; 		// 활성화 여부, Y, N
     private String email;       // 이메일
+    private String profilePic;  // 아바타이미지
     private Date createDate;    // 생성일
     private Date modifyDate;    // 수정일
+
 
     private String token; // JWT 토큰값, DB로는 저장하지 않음
 
@@ -46,8 +48,8 @@ public class Member implements UserDetails {
         return authorities;
     }
 
-    public String setUsername(String username) {
-        return this.userId = username;
+    public String setUsername(String userId) {
+        return this.userId = userId;
     }
     @Override
     public String getUsername() {

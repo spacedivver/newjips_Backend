@@ -7,8 +7,8 @@ import com.kb.member.dto.Member;
 import java.util.List;
 
 public interface MemberMapper {
-//    List<Member> selectMemberAll(); //전체 회원 조회 메서드
-    Member selectById(String id); //ID로 회원 조회
+    List<Member> selectMemberAll(); //전체 회원 조회 메서드
+    Member selectById(String userId); //ID로 회원 조회
     int insertMember(Member member); //회원 추가
     int updateMember(Member member); //회원 정보 업데이트
     int updatePassword(ChangePasswordDTO changePasswordDTO); //비밀번호 업데이트
