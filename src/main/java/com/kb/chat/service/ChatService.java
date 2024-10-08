@@ -21,7 +21,14 @@ public class ChatService {
 
     public List<ChatRoom> getChatRooms(Long uno) {
         log.info("Chat : getChatRooms..............");
-        return mapper.getAllChatRooms(uno);
+        List<ChatRoom> chatRooms = mapper.getAllChatRooms(uno);
+        if (!chatRooms.isEmpty()) {
+            chatRooms.forEach(chatRoom -> {
+               chatRoom.setRequesterFrom(chatRoom.getFromId() == uno);
+            });
+        }
+
+        return chatRooms;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -55,6 +62,15 @@ public class ChatService {
         return getChatRoomByCno(chatRoom.getCno());
     }
 
+    @Transactional
+    public ChatRoom updateChatRoomForSelect(ChatRoom chatRoom) {
+        log.info("Chat : updateChatRoom...........");
+        int result = mapper.updateChatRoomForSelect(chatRoom);
+        if (result != 1)
+            throw new NoSuchElementException("failed to update chat room");
+        return getChatRoomByCno(chatRoom.getCno());
+    }
+
     @Transactional(rollbackFor = Exception.class)
     public ChatRoom sendMsg(ChatMsg chatMsg) {
         log.info("Chat : sendMsg............");
@@ -82,19 +98,18 @@ public class ChatService {
     public List<ChatMsg> getAllChatMsg(Long roomId, long uno) {
         log.info("Chat : getAllChatMsg............");
         List<ChatMsg> chatMsgList = mapper.getChatMsgByRoomId(roomId);
-        if (chatMsgList.isEmpty())
-            throw new NoSuchElementException("failed to get chat msgs");
-
-        // 채팅방 상태 변경 - 읽음 처리
-        ChatRoom chatRoom = mapper.getChatRoomById(roomId);
-        if (chatRoom.getFromId() == uno) {  // Sender가 요청
-            chatRoom.setSenderUnreadCount(0);
-        } else if (chatRoom.getToId() == uno) { // Receiver가 요청
-            chatRoom.setReceiverUnreadCount(0);
-        } else {
-            throw new NoSuchElementException("bad request");
+        if (!chatMsgList.isEmpty()) {
+            // 채팅방 상태 변경 - 읽음 처리
+            ChatRoom chatRoom = mapper.getChatRoomById(roomId);
+            if (chatRoom.getFromId() == uno) {  // Sender가 요청
+                chatRoom.setSenderUnreadCount(0);
+            } else if (chatRoom.getToId() == uno) { // Receiver가 요청
+                chatRoom.setReceiverUnreadCount(0);
+            } else {
+                throw new NoSuchElementException("bad request");
+            }
+            updateChatRoomForSelect(chatRoom);
         }
-        updateChatRoom(chatRoom);
 
         return chatMsgList;
     }
