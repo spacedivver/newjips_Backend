@@ -12,6 +12,7 @@ public interface ChatMapper {
     boolean checkChatRoomToExist(ChatRoom chatRoom);
     List<ChatRoom> getAllChatRooms(Long uno);
     int updateChatRoom(ChatRoom chatRoom);
+    int updateChatRoomForSelect(ChatRoom chatRoom);
 
     // 쪽지
     int insertChatMsg(ChatMsg chatMsg);

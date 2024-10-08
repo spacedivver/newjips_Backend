@@ -20,7 +20,7 @@ public class ChatController {
     private final ChatService service;
 
     @GetMapping("/roomList")
-    public ResponseEntity<List<ChatRoom>> getAllRooms(long uno) {
+    public ResponseEntity<List<ChatRoom>> getAllRooms(@RequestParam long uno) {
         return ResponseEntity.ok(service.getChatRooms(uno));
     }
 
@@ -40,11 +40,8 @@ public class ChatController {
     }
 
     @GetMapping("")
-    public ResponseEntity<List<ChatMsg>> getChatMsgById(@RequestParam("room") long roomId, @RequestParam("uno") long uno) {
+    public ResponseEntity<List<ChatMsg>> getChatMsgListById(@RequestParam("room") long roomId, @RequestParam("uno") long uno) {
         List<ChatMsg> list = service.getAllChatMsg(roomId, uno);
-        if (list.isEmpty()) {
-            ResponseEntity.badRequest();
-        }
         return ResponseEntity.ok(list);
     }
 }

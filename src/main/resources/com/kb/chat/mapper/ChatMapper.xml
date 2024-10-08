@@ -8,12 +8,15 @@
         <result property="cno" column="cno" />
         <result property="fromId" column="from_id" />
         <result property="fromName" column="from_name" />
+        <result property="fromImg" column="from_img" />
         <result property="toId" column="to_id" />
         <result property="toName" column="to_name" />
+        <result property="toImg" column="to_img" />
         <result property="content" column="content" />
         <result property="senderUnreadCount" column="sender_unread_count" />
         <result property="receiverUnreadCount" column="receiver_unread_count" />
         <result property="createAt" column="createAt" />
+        <result property="updateAt" column="updateAt" />
     </resultMap>
 
     <resultMap id="chatMsgResultMap" type="com.kb.chat.dto.ChatMsg">
@@ -35,7 +38,7 @@
 
     <select id="getChatRoomById" parameterType="long" resultMap="chatRoomResultMap">
         select c.cno, c.from_id, c.to_id, c.content, c.sender_unread_count, c.receiver_unread_count,
-               c.createAt, u1.nickname as from_name, u2.nickname as to_name
+               c.createAt, c.updateAt, u1.nickname as from_name, u1.profilePic as from_img, u2.nickname as to_name, u2.profilePic as to_img
         from ChatRoom c
                  join User u1 on (c.from_id = u1.uno)
                  join User u2 on (c.to_id = u2.uno)
@@ -55,7 +58,7 @@
     <select id="getAllChatRooms" parameterType="long" resultMap="chatRoomResultMap">
         select
             c.cno, c.from_id, c.to_id, c.content, c.sender_unread_count, c.receiver_unread_count,
-            c.createAt, u1.nickname as from_name, u2.nickname as to_name
+            c.createAt, c.updateAt, u1.nickname as from_name, u1.profilePic as from_img, u2.nickname as to_name, u2.profilePic as to_img
         from ChatRoom c
                  join User u1 on (c.from_id = u1.uno)
                  join User u2 on (c.to_id = u2.uno)
@@ -66,6 +69,12 @@
     <update id="updateChatRoom" parameterType="com.kb.chat.dto.ChatRoom">
         update ChatRoom set
             content = #{content}, sender_unread_count = #{senderUnreadCount}, receiver_unread_count = #{receiverUnreadCount}, updateAt = CURRENT_TIMESTAMP
+        where cno = #{cno}
+    </update>
+
+    <update id="updateChatRoomForSelect" parameterType="com.kb.chat.dto.ChatRoom">
+        update ChatRoom set
+            content = #{content}, sender_unread_count = #{senderUnreadCount}, receiver_unread_count = #{receiverUnreadCount}
         where cno = #{cno}
     </update>
 
