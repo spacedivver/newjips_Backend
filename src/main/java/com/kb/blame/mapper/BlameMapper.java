@@ -11,5 +11,5 @@ public interface BlameMapper {
 
     // 신고 버디즈, 매물 리스트
     List<BlameBuddiz> selectBuddizBlameList(long uno);
-    List<Blame> selectEstateBlameList(long uno);
+    List<BlameEstate> selectEstateBlameList(long uno);
 }

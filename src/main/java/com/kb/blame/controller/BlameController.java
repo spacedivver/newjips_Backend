@@ -2,6 +2,7 @@ package com.kb.blame.controller;
 
 import com.kb.blame.dto.Blame;
 import com.kb.blame.dto.BlameBuddiz;
+import com.kb.blame.dto.BlameEstate;
 import com.kb.blame.service.BlameService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +36,7 @@ public class BlameController {
     }
 
     @GetMapping("/estate/{id}")
-    public ResponseEntity<List<Blame>> getBlameEstate(@PathVariable("id") long uno) {
+    public ResponseEntity<List<BlameEstate>> getBlameEstate(@PathVariable("id") long uno) {
         return ResponseEntity.ok(service.selectEstateBlameList(uno));
     }
 }
