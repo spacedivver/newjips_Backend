@@ -7,11 +7,12 @@
 
     <resultMap id="memberResultMap"  type="com.kb.member.dto.Member">
         <id property="uno" 				column="uno" />
-        <result property="userId"		column="userid" />
+        <result property="userId"		column="userId" />
         <result property="password"		column="password" />
         <result property="name" 		column="name" />
         <result property="nickname"     column="nickname"/>
         <result property="gender"       column="gender"/>
+        <result property="profilePic" column="profilePic"/>
         <collection property="authorities"
                     javaType="arraylist"
                     ofType="org.springframework.security.core.authority.SimpleGrantedAuthority"
@@ -24,14 +25,13 @@
         </constructor>
     </resultMap>
 
-<!--    <select id="selectMemberAll" resultMap="memberResultMap">-->
-<!--        SELECT-->
-<!--            uno, u.userId, password, name-->
-<!--        FROM-->
-<!--            user u-->
-<!--            LEFT OUTER JOIN user_auth a ON u.userId = u.userId-->
-<!--    </select>-->
-
+    <select id="selectMemberAll" resultMap="memberResultMap">
+        SELECT
+            uno, u.userId, password, name
+        FROM
+            user u
+            LEFT OUTER JOIN user_auth a ON u.userId = a.userId
+    </select>
 
 <!--    <select id="selectById" resultMap="memberResultMap" parameterType="string">-->
 <!--        SELECT-->
@@ -42,46 +42,49 @@
 <!--        WHERE m.status = 'y' and m.id = #{id}-->
 <!--    </select>-->
     <select id="selectById" resultType="com.kb.member.dto.Member" parameterType="string">
-    SELECT uno, userId, password, name, nickname, gender
+    SELECT uno, userId, password, name, nickname, gender, profilePic
     FROM User u
     WHERE u.userId = #{userId}
     </select>
 
     <insert id="insertMember" parameterType="com.kb.member.dto.Member">
-        INSERT INTO User(userId, password, name, nickname, gender)
-        VALUES(#{userId}, #{password}, #{name}, #{nickname}, #{gender})
+        INSERT INTO User(userId, password, name, nickname, gender, profilePic)
+        VALUES(#{userId}, #{password}, #{name}, #{nickname}, #{gender} ,#{profilePic})
     </insert>
 
 
     <update id="updateMember" parameterType="com.kb.member.dto.Member">
-        UPDATE member
+        UPDATE User
         SET
             name = #{name},
-            email = #{email},
+            userId = #{userId},
+            nickname = #{nickname},
+            profilePic = #{profilePic},
+            gender = #{gender},
             modify_date = now()
-        WHERE mno = #{mno}
+        WHERE uno = #{uno}
     </update>
 
 
     <update id="updatePassword" parameterType="com.kb.member.dto.Member">
-        UPDATE member
+        UPDATE User
         SET
             password = #{newPassword},
             modify_date = now()
-        WHERE id = #{id}
+        WHERE uno = #{uno}
     </update>
 
 <!--    <delete id="deleteMember">-->
-<!--        DELETE FROM member-->
-<!--        WHERE mno = #{mno}-->
+<!--        DELETE FROM User-->
+<!--        WHERE uno = #{uno}-->
 <!--    </delete> -->
 
     <update id="deleteMember" parameterType="long">
-        UPDATE member
+        UPDATE User
         SET
             status = 'n',
             modify_date = now()
-        WHERE mno = #{mno}
+        WHERE uno = #{uno}
     </update>
 
 <!--    <insert id="insertAuth"  parameterType="com.kb.member.dto.Auth">-->

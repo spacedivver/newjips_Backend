@@ -61,7 +61,7 @@ public class UploadFiles {
             }
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("파일 다운로드 중 오류 발생"+e.getMessage(),e);
         }
     }
 }
