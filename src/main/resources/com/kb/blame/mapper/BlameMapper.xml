@@ -37,6 +37,7 @@
         <result property="tradetype" column="tradetype" />
         <result property="deposit" column="deposit" />
         <result property="monthlyPee" column="monthlyPee" />
+        <result property="img" column="first_img" />
     </resultMap>
 
     <insert id="insertBlame" parameterType="com.kb.blame.dto.Blame">
@@ -67,7 +68,7 @@
 
     <select id="selectEstateBlameList" parameterType="long" resultMap="blameEstateResultMap">
         select b.blaid, b.target_type, b.content, b.datetime, b.uno, b.blamed_id,
-               e.deposit, e.tradetype, e.monthlyPee
+               e.deposit, e.tradetype, e.monthlyPee, SUBSTRING_INDEX(e.img, ',', 1) AS first_img
         from Blame as b
                  Join Estate as e ON e.eno = b.blamed_id
 

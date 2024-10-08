@@ -22,5 +22,6 @@ public class BlameEstate {
     private String tradetype;
     private String deposit;
     private String monthlyPee;
+    private String img;
 
 }
