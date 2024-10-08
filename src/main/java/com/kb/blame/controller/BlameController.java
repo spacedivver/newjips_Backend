@@ -1,6 +1,7 @@
 package com.kb.blame.controller;
 
 import com.kb.blame.dto.Blame;
+import com.kb.blame.dto.BlameBuddiz;
 import com.kb.blame.service.BlameService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +30,7 @@ public class BlameController {
     }
 
     @GetMapping("/buddiz/{id}")
-    public ResponseEntity<List<Blame>> getBlameBuddiz(@PathVariable("id") long uno) {
+    public ResponseEntity<List<BlameBuddiz>> getBlameBuddiz(@PathVariable("id") long uno) {
         return ResponseEntity.ok(service.selectBuddizBlameList(uno));
     }
 

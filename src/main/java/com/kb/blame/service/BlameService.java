@@ -1,6 +1,7 @@
 package com.kb.blame.service;
 
 import com.kb.blame.dto.Blame;
+import com.kb.blame.dto.BlameBuddiz;
 import com.kb.blame.mapper.BlameMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
@@ -33,7 +34,7 @@ public class BlameService {
     }
 
     @Transactional
-    public List<Blame> selectBuddizBlameList(long uno) {
+    public List<BlameBuddiz> selectBuddizBlameList(long uno) {
         log.info("Blame : Select Buddiz Blame...............");
         return mapper.selectBuddizBlameList(uno);
     }

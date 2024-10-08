@@ -13,6 +13,19 @@
         <result property="blamedId" column="blamed_id" />
     </resultMap>
 
+    <resultMap id="blameBuddizResultMap" type="com.kb.blame.dto.BlameBuddiz">
+        <result property="blaid" column="blaid" />
+        <result property="targetType" column="target_type"/>
+        <result property="content" column="content" />
+        <result property="datetime" column="datetime" />
+        <result property="uno" column="uno" />
+        <result property="blamedId" column="blamed_id" />
+
+        <result property="blamedNickName" column="blamedNickname" />
+        <result property="blamedProfilePic" column="blamedProfilePic" />
+        <result property="blamedPersonality" column="blamedPersonality" />
+    </resultMap>
+
     <insert id="insertBlame" parameterType="com.kb.blame.dto.Blame">
         <selectKey keyProperty="blaid" resultType="long" order="AFTER">
             SELECT @@identity as blaid
@@ -28,9 +41,13 @@
         where b.blaid = #{ blaid }
     </select>
 
-    <select id="selectBuddizBlameList" parameterType="long" resultMap="blameResultMap">
-        select b.blaid, b.target_type, b.content, b.datetime, b.uno, b.blamed_id
+    <select id="selectBuddizBlameList" parameterType="long" resultMap="blameBuddizResultMap">
+        select b.blaid, b.target_type, b.content, b.datetime, b.uno, b.blamed_id,
+               U.nickname AS blamedNickname,
+               U.profilePic AS blamedProfilePic, UB.personality AS blamedPersonality
         from Blame as b
+                 JOIN User U on b.blamed_id = U.uno
+                 JOIN UserBuddiz UB ON b.blamed_id = UB.uno
         where b.uno = #{uno} and b.target_type = 'B'
         Order By b.datetime DESC
     </select>
