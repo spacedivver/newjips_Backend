@@ -5,7 +5,7 @@ import com.kb.chat.dto.ChatMsg;
 import com.kb.chat.dto.ChatRoom;
 import com.kb.chat.mapper.ChatMapper;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@Log4j
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class ChatService {

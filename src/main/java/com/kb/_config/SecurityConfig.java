@@ -1,7 +1,7 @@
 package com.kb._config;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.mybatis.spring.annotation.MapperScan;
 import com.kb.security.filter.AuthenticationErrorFilter;
 import com.kb.security.filter.JwtAuthenticationFilter;
@@ -32,7 +32,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@Log4j
+@Log4j2
 @MapperScan(basePackages = {"com.kb"})
 @ComponentScan(basePackages = {"com.kb.security"})
 @RequiredArgsConstructor

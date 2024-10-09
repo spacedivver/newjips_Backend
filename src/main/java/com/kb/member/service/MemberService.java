@@ -2,6 +2,7 @@ package com.kb.member.service;
 
 import com.kb.member.dto.Auth;
 import com.kb.member.dto.ChangePasswordDTO;
+import com.kb.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.kb.member.dto.Member;
@@ -30,7 +31,9 @@ public class MemberService{
 
     final PasswordEncoder passwordEncoder;
     final MemberMapper mapper;
-
+    final S3Uploader s3Uploader;
+    final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+    final String default_img = "https://cdn-nj.s3.ap-northeast-2.amazonaws.com/default.jpg";
 
     public Member login(Member member) {
         Member saveMember = mapper.selectById(member.getUserId());
@@ -92,35 +95,42 @@ public class MemberService{
         return mapper.selectById(member.getUserId());
     }
 
-    public Member update(Member updateMember, MultipartFile avatar) throws IllegalAccessException {
-        Member oldMember = mapper.selectById(updateMember.getUserId());
-        if(!passwordEncoder.matches(updateMember.getPassword(),oldMember.getPassword())) {
-            throw new PasswordMissmatchException();
-        }
+    public Member update(Member updateMember, MultipartFile file) throws IllegalAccessException {
+        Member oldMember = mapper.selectByUno(updateMember.getUno());
         updateMember.setUno(oldMember.getUno());
-        mapper.updateMember(updateMember);
-        if(avatar != null && !avatar.isEmpty()) {
-            saveAvatar(avatar, oldMember.getUserId());
-        }
-        return mapper.selectById(updateMember.getUserId());
-    }
+        if(file != null && !file.isEmpty()) {
+            if (file.getSize() > MAX_FILE_SIZE) {
+                throw new IllegalArgumentException("파일 크기는 최대 5MB 입니다.");
+            }
 
-    public Member delete(String userId) {
-        Member member = mapper.selectById(userId);
-        mapper.deleteMember(member.getUno());
-        return member;
+            if (!oldMember.getProfilePic().equals(default_img)) {
+                s3Uploader.deleteFile(oldMember.getProfilePic());
+            }
+
+            // 이미지 업로드
+            String url = s3Uploader.saveFile(file);
+            updateMember.setProfilePic(url);
+        } else {
+            updateMember.setProfilePic(default_img);
+        }
+        mapper.updateMember(updateMember);
+        return mapper.selectByUno(updateMember.getUno());
     }
 
     public void changePassword(ChangePasswordDTO changePassword) {
-        Member member = mapper.selectById(changePassword.getUserId());
-//        System.out.println(changePassword);
+        Member member = mapper.selectByUno(changePassword.getUno());
+
         if(!passwordEncoder.matches(
-                changePassword.getOldPassword(),
-                member.getPassword()
+            changePassword.getOldPassword(),
+            member.getPassword()
         )) {
               throw new PasswordMissmatchException();
         }
-        changePassword.setNewPassword(passwordEncoder.encode(changePassword.getNewPassword()));
-        mapper.updatePassword(changePassword);
+
+        member.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
+        int result = mapper.updatePassword(member);
+        if(result != 1){
+            throw new NoSuchElementException();
+        }
     }
 }
