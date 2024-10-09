@@ -1,7 +1,7 @@
 package com.multi.config;
 
 import com.kb._config.RootConfig;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.junit.jupiter.api.DisplayName;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes= {RootConfig.class})
-@Log4j
+@Log4j2
 class RootConfigTest {
 
     @Autowired

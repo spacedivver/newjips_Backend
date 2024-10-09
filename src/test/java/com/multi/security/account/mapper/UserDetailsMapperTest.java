@@ -2,14 +2,14 @@ package com.multi.security.account.mapper;
 
 import com.kb._config.RootConfig;
 import com.kb._config.SecurityConfig;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { RootConfig.class, SecurityConfig.class })
-@Log4j
+@Log4j2
 public class UserDetailsMapperTest {
 //    @Autowired
 //    private UserDetailsMapper mapper;

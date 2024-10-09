@@ -1,7 +1,7 @@
 package com.multi.board.mapper;
 
 import com.kb.board.mapper.BoardMapper;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import com.kb._config.RootConfig;
@@ -11,7 +11,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class,})
-@Log4j
+@Log4j2
 class BoardMapperTest {
     @Autowired
     BoardMapper mapper;
