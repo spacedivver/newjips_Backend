@@ -25,9 +25,6 @@ import java.io.File;
 @PropertySource({"classpath:/application.properties"})
 public class MemberController {
 
-    @Value("#{'${os_type}' == 'win' ? '${file_save_location_win}':'${file_save_location_other}'}")
-    public String LOCATION;
-
     private final MemberService service;
 
     @GetMapping("/checkid/{userId}")
@@ -40,17 +37,6 @@ public class MemberController {
         Member member = service.getMember(userId);
         return ResponseEntity.ok(member);
     }
-
-    @GetMapping("/{userId}/avatar")
-    public void getAvatar(@PathVariable String userId, HttpServletResponse response) {
-        String avatarPath = LOCATION + "/avatar/" + userId + ".png";
-        File file = new File(avatarPath);
-        if (!file.exists()) {
-            file = new File( LOCATION + "/avatar/unknown.png"); //기본 이미지 설정
-        }
-        UploadFiles.downloadImage(response, file);
-    }
-
 
     @PostMapping("")
     public ResponseEntity<Member> join(MemberDTO memberDTO,
@@ -91,15 +77,10 @@ public class MemberController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{userId}")
+    @PutMapping("")
     public ResponseEntity<Member> changeProfile(MemberDTO memberDTO,
                 @RequestParam(name = "avatar", required = false) MultipartFile avatar) throws IllegalAccessException {
         Member member = memberDTO.toMember();
         return ResponseEntity.ok(service.update(member, avatar));
-    }
-
-    @DeleteMapping("/{userId}")
-    public ResponseEntity<Member> delete(@PathVariable String userId) {
-        return ResponseEntity.ok(service.delete(userId));
     }
 }

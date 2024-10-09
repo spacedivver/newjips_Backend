@@ -56,12 +56,8 @@
     <update id="updateMember" parameterType="com.kb.member.dto.Member">
         UPDATE User
         SET
-            name = #{name},
-            userId = #{userId},
             nickname = #{nickname},
-            profilePic = #{profilePic},
-            gender = #{gender},
-            modify_date = now()
+            profilePic = #{profilePic}
         WHERE uno = #{uno}
     </update>
 
@@ -69,31 +65,20 @@
     <update id="updatePassword" parameterType="com.kb.member.dto.Member">
         UPDATE User
         SET
-            password = #{newPassword},
-            modify_date = now()
+            password = #{password}
         WHERE uno = #{uno}
     </update>
 
-<!--    <delete id="deleteMember">-->
-<!--        DELETE FROM User-->
-<!--        WHERE uno = #{uno}-->
-<!--    </delete> -->
-
-    <update id="deleteMember" parameterType="long">
-        UPDATE User
-        SET
-            status = 'n',
-            modify_date = now()
-        WHERE uno = #{uno}
-    </update>
-
-<!--    <insert id="insertAuth"  parameterType="com.kb.member.dto.Auth">-->
-<!--        INSERT INTO member_auth(id, authority)-->
-<!--        VALUES(#{id}, #{authority})-->
-<!--    </insert>-->
 
     <delete id="deleteAuth"  parameterType="com.kb.member.dto.Auth">
         DELETE FROM  member_auth
         WHERE id = #{id} AND authority = #{auth}
     </delete>
+
+
+    <select id="selectByUno" resultType="com.kb.member.dto.Member" parameterType="long">
+        SELECT uno, userId, password, name, nickname, gender, profilePic
+        FROM User u
+        WHERE u.uno = #{uno}
+    </select>
 </mapper>
