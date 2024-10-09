@@ -1,10 +1,10 @@
 package com.multi.persistence;
 
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-@Log4j
+@Log4j2
 public class JDBCTest {
     static {
 //        try {

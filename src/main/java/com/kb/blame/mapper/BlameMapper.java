@@ -10,6 +10,6 @@ public interface BlameMapper {
     Blame selectBlameById(Long blaid);
 
     // 신고 버디즈, 매물 리스트
-    List<Blame> selectBuddizBlameList(long uno);
-    List<Blame> selectEstateBlameList(long uno);
+    List<BlameBuddiz> selectBuddizBlameList(long uno);
+    List<BlameEstate> selectEstateBlameList(long uno);
 }
