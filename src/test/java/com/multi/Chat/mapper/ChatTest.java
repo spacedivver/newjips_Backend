@@ -5,7 +5,7 @@ import com.kb._config.ServletConfig;
 import com.kb._config.WebConfig;
 import com.kb._config.WebMvcConfig;
 import com.kb.chat.mapper.ChatMapper;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +18,7 @@ import java.sql.SQLOutput;
 @WebAppConfiguration
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {RootConfig.class, WebConfig.class, WebMvcConfig.class, ServletConfig.class})
-@Log4j
+@Log4j2
 public class ChatTest {
     @Autowired
     private ChatMapper chatMapper;
