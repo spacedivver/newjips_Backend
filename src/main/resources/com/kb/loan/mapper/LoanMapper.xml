@@ -5,17 +5,19 @@
 
 <mapper namespace="com.kb.loan.mapper.LoanMapper">
 
-    <!-- Query to get all loans -->
+    <!-- Fetch all loans -->
     <select id="getLoanList" resultType="com.kb.loan.dto.LoanDTO">
-        SELECT lno, bank, title, subtitle
+        SELECT lno, bank, url, title, subtitle, content, period, howToRepay, loanLimit, interest, loanGuide, lan
         FROM Loan
     </select>
 
-    <!-- Query to get loan details by lno -->
+    <!-- Fetch loan detail by lno -->
     <select id="getLoanDetail" parameterType="Long" resultType="com.kb.loan.dto.LoanDTO">
-        SELECT *
+        SELECT lno, bank, url, title, subtitle, content, period, howToRepay, loanLimit, interest, loanGuide, lan
         FROM Loan
         WHERE lno = #{lno}
     </select>
 
 </mapper>
+
+

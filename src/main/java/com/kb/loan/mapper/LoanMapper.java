@@ -8,5 +8,4 @@ import java.util.List;
 public interface LoanMapper {
     List<LoanDTO> getLoanList();
     LoanDTO getLoanDetail(@Param("lno") Long lno);
-
 }

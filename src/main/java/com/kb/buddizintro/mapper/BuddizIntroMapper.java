@@ -10,6 +10,5 @@ public interface BuddizIntroMapper {
 
     void updateBuddizIntro(BuddizIntroDTO buddizIntroDTO); // Update Buddiz introduction
 
-    void insertBuddizIntro(BuddizIntroDTO buddizIntroDTO);
 
 }

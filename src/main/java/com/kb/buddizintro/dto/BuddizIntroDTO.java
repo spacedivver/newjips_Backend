@@ -9,12 +9,12 @@ import lombok.NoArgsConstructor;
 @Data
 public class BuddizIntroDTO {
     private Integer uno; // Unique number for identification
-    private Integer liveInKr;
-    private String character;
-    private Integer cost;
-    private Integer hiredTimes;
-    private Double rating;
-    private String selfInfo;
-    private String lan;
-    private Integer reviewcnt;
+    private Integer liveInKr; // Experience in Korea
+    private String personality; // Characteristic or personality field
+    private Integer cost; // Cost
+    private Integer hiredTimes; // Number of times hired
+    private Double rating; // Rating
+    private String selfInfo; // Self introduction
+    private String lan; // Language preference
+    private String useLan; // Languages spoken
 }
