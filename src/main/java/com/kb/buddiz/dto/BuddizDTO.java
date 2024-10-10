@@ -14,9 +14,10 @@ public class BuddizDTO {
     private long likeUno;
     private long likedUno;
     private long reviewerUno;
+    private long uno;
 
     public Buddiz toBuddiz() {
-        return Buddiz.builder().rating(rating).reviewContent(reviewContent).reviewerUno(reviewerUno).build();
+        return Buddiz.builder().rating(rating).reviewContent(reviewContent).reviewerUno(reviewerUno).uno(uno).build();
     }
     public Buddiz toReview() {
         return Buddiz.builder().likeUno(likeUno).likedUno(likedUno).build();
