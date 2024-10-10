@@ -53,6 +53,7 @@ public class BuddizService {
         int totalSize = mapper.selectReviewCount(uno);
         List<Review> reviewList = mapper.selectReviewByUno(uno);
         double avg=mapper.selectReviewAvg(uno);
+//        String profilePic=mapper.
         if (reviewList == null || reviewList.isEmpty()) {
             reviewList = new ArrayList<>();
         }

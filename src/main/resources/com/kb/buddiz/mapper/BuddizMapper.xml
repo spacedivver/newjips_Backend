@@ -110,7 +110,7 @@
 
         <![CDATA[
         select
-            r.nickname as reviewer, r.reviewContent, r.createdAt, r.rating
+            r.nickname as reviewer, r.reviewContent, r.createdAt, r.rating, r.profilePic
         from Review r
         where r.uno = #{uno} ]]>
 
@@ -157,9 +157,9 @@
         <!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
         <!--            SELECT @@identity as uno-->
         <!--        </selectKey>-->
-        insert into Review (uno, rating, reviewContent, createdAt, nickname)
+        insert into Review (uno, rating, reviewContent, createdAt, nickname, profilePic)
         values(#{uno}, #{rating}, #{reviewContent}, NOW(),
-        (select nickname from User where uno = #{reviewerUno}))
+        (select nickname from User where uno = #{reviewerUno}), (select profilePic from User where uno = #{reviewerUno}))
     </insert>
 
     <insert id="insertWish" parameterType="com.kb.buddiz.dto.Buddiz">
