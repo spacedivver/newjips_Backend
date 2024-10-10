@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
@@ -24,4 +26,6 @@ public class EstateDetailDTO {
     private String lan;
     private Long mno;
     private String content;
+    private String imgString;
+    private List<String> img;
 }
