@@ -71,8 +71,8 @@ public class MemberController {
     }
 
 
-    @PutMapping("/{userId}/changepassword")
-    public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePassword) {
+    @PutMapping("/changepassword")
+    public ResponseEntity<?> changePassword(ChangePasswordDTO changePassword) {
         service.changePassword(changePassword);
         return ResponseEntity.ok().build();
     }
