@@ -45,29 +45,36 @@ public class BuddizController {
         return ResponseEntity.ok(service.getBuddiz(uno));
     }
 
-//    @GetMapping("/review/{uno}")
-//    public ResponseEntity<Buddiz> getReviewById(@PathVariable long uno)
-//    {
-//        return ResponseEntity.ok(service.getReview(uno));
-//    }
 
     @PostMapping("/reviewAdd/{uno}")
     public ResponseEntity<Buddiz> create(
-            BuddizDTO buddizDTO,
+            BuddizDTO buddizDTO, @PathVariable long uno,
             @AuthenticationPrincipal Member principal) {
+        System.out.println("Received uno: " + uno);
         Buddiz buddiz = buddizDTO.toBuddiz();
+        buddiz.setUno(uno);
+        buddiz.setReviewerUno(principal.getUno());
+        System.out.println("Received uno: " + buddiz.getReviewerUno());
+//        log.info("ReviewerUno: {}", buddiz.getReviewerUno());
+//        log.info("ReviewContent: {}", buddiz.getReviewContent());
+        System.out.println(buddiz.getReviewContent());
+        System.out.println("testetsetsetsetsetsetsetsetsettsetsetsetsetsetsetsetsetsetse");
 //        buddiz.setUno(principal.getUno());
         return ResponseEntity.ok(service.createBuddiz(buddiz));
     }
 
-//    @PostMapping("/reviewWish/{uno}")
-//    public ResponseEntity<Buddiz> reviewWish(
-//            BuddizDTO buddizDTO,
-//            @AuthenticationPrincipal Member principal) {
-//        Buddiz buddiz = buddizDTO.toReview();
-//        buddiz.setUno(principal.getUno());
-//        return ResponseEntity.ok(service.createBuddiz(buddiz));
-//    }
+    @PostMapping("/reviewWish/{uno}")
+    public ResponseEntity<Buddiz> reviewWish(
+            @PathVariable long uno,
+            BuddizDTO buddizDTO,
+            @AuthenticationPrincipal Member principal) {
+        Buddiz buddiz = buddizDTO.toReview();
+        buddiz.setUno(principal.getUno());
+        buddiz.setWished_id(uno);
+        System.out.println(buddiz.getUno());
+        System.out.println(buddiz.getWished_id());
+        return ResponseEntity.ok(service.createWish(buddiz));
+    }
 
     @PutMapping("/{uno}")
     public ResponseEntity<Buddiz> update(@PathVariable long uno, BuddizDTO buddizDTO) {

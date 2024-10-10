@@ -15,5 +15,6 @@ import java.util.List;
 public class ReviewList {
     private List<Review> ReviewList;
     private int totalCount;
+    private double avg;
 
 }

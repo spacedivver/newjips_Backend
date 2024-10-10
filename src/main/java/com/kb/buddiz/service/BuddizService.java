@@ -52,15 +52,19 @@ public class BuddizService {
     public ReviewList getReviewList(long uno) {
         int totalSize = mapper.selectReviewCount(uno);
         List<Review> reviewList = mapper.selectReviewByUno(uno);
+        double avg=mapper.selectReviewAvg(uno);
+//        String profilePic=mapper.
         if (reviewList == null || reviewList.isEmpty()) {
             reviewList = new ArrayList<>();
         }
-        return new ReviewList(reviewList,totalSize);
+        return new ReviewList(reviewList,totalSize, avg);
     }
 
     @Transactional
     public Buddiz getBuddiz(long uno) {
+        System.out.println("get Buddiz "+uno);
         Buddiz buddiz = mapper.selectBuddizByUno(uno);
+        System.out.println("get Buddiz "+buddiz);
         return Optional.of(buddiz)
                 .orElseThrow(NoSuchElementException::new);
     }
@@ -81,6 +85,17 @@ public class BuddizService {
             throw new NoSuchElementException();
         }
         return getBuddiz(buddiz.getUno());
+    }
+
+    @Transactional(rollbackFor = Exception.class) // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
+    public Buddiz createWish(Buddiz buddiz) {
+        int result = mapper.insertWish(buddiz);
+        System.out.println("service"+buddiz.getUno());
+        System.out.println("service"+buddiz.getWished_id());
+        if (result != 1) {
+            throw new NoSuchElementException();
+        }
+        return getBuddiz(buddiz.getWished_id()); // 수정된 부분
     }
 
 
@@ -106,5 +121,4 @@ public class BuddizService {
         return buddiz;
     }
 
-    
 }
