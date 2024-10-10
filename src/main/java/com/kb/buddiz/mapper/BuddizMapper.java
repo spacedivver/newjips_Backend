@@ -1,6 +1,5 @@
 package com.kb.buddiz.mapper;
 
-import com.kb.board.dto.Board;
 import com.kb.buddiz.dto.Buddiz;
 import com.kb.buddiz.dto.BuddizParam;
 import com.kb.buddiz.dto.Review;
@@ -16,6 +15,9 @@ public interface BuddizMapper {
     int updateBuddiz(Buddiz buddiz);
     int deleteBuddiz(long uno);
     int selectReviewCount(long uno);
+
+    int insertWish(Buddiz buddiz);
+    double selectReviewAvg(long uno);
 
 
 }

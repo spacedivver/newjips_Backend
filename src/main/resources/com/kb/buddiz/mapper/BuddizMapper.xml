@@ -16,6 +16,8 @@
         <result property="lan" column="lan"/>
         <result property="reviewcnt" column="reviewcnt"/>
         <result property="location" column="location"/>
+        <result property="profilePic" column="profilePic"/>
+        <result property="avg" column="avg"/>
 
 <!--        외부조인-->
         <result property="gender" column="gender"/>
@@ -43,7 +45,7 @@
     <select id="selectBuddizList" parameterType="com.kb.buddiz.dto.BuddizParam" resultMap="buddizResultMap">
         <![CDATA[
     select
-        distinct ub.uno, u.name, ub.rating, ub.liveInKr, ub.personality
+        distinct ub.uno, u.name, ub.rating, ub.liveInKr, ub.personality, u.profilePic
     from UserBuddiz ub
     left outer join User u on ub.uno = u.uno
      where 1=1  ]]>
@@ -107,24 +109,46 @@
     <select id="selectReviewByUno" parameterType="long" resultMap="reviewResultMap">
         <![CDATA[
         select
-            r.nickname as reviewer, r.reviewContent, r.createdAt, r.rating
+            r.reviewContent, r.createdAt, r.rating,
+            (u.nickname as reviewer
+                from Review r2
+                join User u on r2.reviewerUno = u.uno
+            WHERE r2.reviewUno = r.reviewUnofdsdf                )
         from Review r
-        where r.uno = #{uno} ]]>
+        where r.uno = #{uno}
+        GROUP BY r.nickname, r.reviewContent, r.createdAt, r.rating]]>
+
+        SELECT
+            r.reviewContent,
+            r.createdAt,
+            r.rating,
+            (SELECT u.nickname
+             FROM Review r2
+                      JOIN User u ON r2.reviewerUno = u.uno
+             WHERE r2.reviewUno = r.reviewUno
+            ) AS reviewer
+        FROM
+            Review r
+        WHERE
+            r.uno = #{uno}
+        GROUP BY
+            r.reviewContent, r.createdAt, r.rating;
+
 
     </select>
 
-<!--    <select id="selectReviewAvg" parameterType="com.kb.buddiz.dto.Buddiz" resultType="double">-->
-<!--        select AVG(r.rating)-->
-<!--        from Review r-->
-<!--        where r.uno = #{uno}-->
-<!--    </select>-->
+    <select id="selectReviewAvg" parameterType="com.kb.buddiz.dto.Buddiz" resultType="double">
+        SELECT AVG(r2.rating) as avg
+        FROM Review r2
+        WHERE r2.uno = #{uno}
+    </select>
 
 
 
     <!-- 상세보기 용도, 모든 인자를 가져와야한다. -->
-    <select id="selectBuddizByUno" parameterType="com.kb.buddiz.dto.Buddiz" resultMap="buddizResultMap">
+    <select id="selectBuddizByUno" parameterType="com.kb.buddiz.dto.BuddizParam" resultMap="buddizResultMap">
         select
-            ub.uno, u.userId, u.name, ub.location, ub.cost,ub.liveInKr,ub.rating,ub.lan,ub.hiredTimes,
+            ub.uno, u.userId, u.name, ub.location, ub.cost,ub.liveInKr,ub.rating,ub.lan,ub.hiredTimes,u.profilePic,
             ub.personality, u.nickname, ub.selfInfo
         from UserBuddiz ub
                  join User u on (u.uno = ub.uno)
@@ -137,17 +161,17 @@
 <!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
 <!--            SELECT @@identity as uno-->
 <!--        </selectKey>-->
+        insert into Review ( uno, rating, reviewContent, createdAt, reviewrUno)
+        values(#{uno}, #{rating}, #{reviewContent}, NOW(), #{reviewerUno})
+    </insert>
+
+    <insert id="insertWish" parameterType="com.kb.buddiz.dto.Buddiz">
+        <!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
+        <!--            SELECT @@identity as uno-->
+        <!--        </selectKey>-->
         insert into Review (nickname, uno, rating, content,createdAt)
         values(default, #{uno}, #{rating}, #{content})
     </insert>
-
-<!--    <insert id="insertBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">-->
-<!--        &lt;!&ndash;        <selectKey keyProperty="uno" resultType="int" order="AFTER">&ndash;&gt;-->
-<!--        &lt;!&ndash;            SELECT @@identity as uno&ndash;&gt;-->
-<!--        &lt;!&ndash;        </selectKey>&ndash;&gt;-->
-<!--        insert into Review (nickname, uno, rating, content,createdAt)-->
-<!--        values(default, #{uno}, #{rating}, #{content})-->
-<!--    </insert>-->
 
     <update id="updateBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">
         update board set
