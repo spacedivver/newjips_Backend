@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.buddiz.mapper.BuddizMapper">
+
+    <resultMap type="com.kb.buddiz.dto.Buddiz" id="buddizResultMap">
+        <id property="uno" column="uno"/>
+        <result property="liveInKr" column="liveInKr"/>
+        <result property="personality" column="personality"/>
+        <result property="cost" column="cost"/>
+        <result property="hiredTimes" column="hiredTimes"/>
+        <result property="rating" column="rating"/>
+        <result property="selfInfo" column="selfInfo"/>
+        <result property="lan" column="lan"/>
+        <result property="reviewcnt" column="reviewcnt"/>
+        <result property="location" column="location"/>
+
+<!--        외부조인-->
+        <result property="gender" column="gender"/>
+        <result property="userId" column="userId"/>
+        <result property="name" column="name"/>
+        <result property="nickname" column="nickname"/>
+        <result property="reviewer" column="reviewer"/>
+    </resultMap>
+
+<!--    <resultMap type="com.kb.buddiz.dto.Buddiz" id="reviewResultMap" extends="buddizResultMap">-->
+<!--        <collection property="reviewList"-->
+<!--                    javaType="arraylist"-->
+<!--                    ofType="com.kb.buddiz.dto.Review"-->
+<!--                    column="uno"-->
+<!--                    select="selectReviewByUno"/>-->
+<!--    </resultMap>-->
+
+    <resultMap type="com.kb.buddiz.dto.Review" id="reviewResultMap">
+        <result property="reviewer" column="reviewer"/>
+        <result property="reviewContent" column="reviewContent"/>
+        <result property="createdAt" column="createdAt"/>
+        <result property="rating" column="rating"/>
+    </resultMap>
+
+    <select id="selectBuddizList" parameterType="com.kb.buddiz.dto.BuddizParam" resultMap="buddizResultMap">
+        <![CDATA[
+    select
+        distinct ub.uno, u.name, ub.rating, ub.liveInKr, ub.personality
+    from UserBuddiz ub
+    left outer join User u on ub.uno = u.uno
+     where 1=1  ]]>
+
+        <if test="searchType == 'M'">
+            and u.gender = 'M'
+        </if>
+
+        <if test="searchType == 'F'">
+            and u.gender = 'F'
+        </if>
+
+        <if test="searchValue != null">
+            and u.name like CONCAT('%', #{searchValue}, '%')
+        </if>
+
+
+        order by
+        <choose>
+            <when test="sort == 'cost'">
+                ub.cost desc
+            </when>
+            <when test="sort == 'reviewcnt'">
+                ub.reviewcnt desc
+            </when>
+            <otherwise>
+                ub.rating desc
+            </otherwise>
+        </choose>
+
+
+        limit ${limit} offset ${offset}
+
+    </select>
+
+    <select id="selectBuddizCount" parameterType="com.kb.buddiz.dto.BuddizParam" resultType="int">
+        select count(distinct ub.uno)
+        from UserBuddiz ub
+        left outer join User u on ub.uno = u.uno
+        where 1=1
+
+        <if test="searchType == 'M'">
+            and u.gender = 'M'
+        </if>
+
+        <if test="searchType == 'F'">
+            and u.gender = 'F'
+        </if>
+
+        <if test="searchValue != null">
+            and u.name like CONCAT('%', #{searchValue}, '%')
+        </if>
+    </select>
+
+    <select id="selectReviewCount" parameterType="com.kb.buddiz.dto.Buddiz" resultType="int">
+        select count(*)
+        from Review r
+        where r.uno = #{uno}
+    </select>
+
+    <select id="selectReviewByUno" parameterType="long" resultMap="reviewResultMap">
+        <![CDATA[
+        select
+            r.nickname as reviewer, r.reviewContent, r.createdAt, r.rating
+        from Review r
+        where r.uno = #{uno} ]]>
+
+    </select>
+
+<!--    <select id="selectReviewAvg" parameterType="com.kb.buddiz.dto.Buddiz" resultType="double">-->
+<!--        select AVG(r.rating)-->
+<!--        from Review r-->
+<!--        where r.uno = #{uno}-->
+<!--    </select>-->
+
+
+
+    <!-- 상세보기 용도, 모든 인자를 가져와야한다. -->
+    <select id="selectBuddizByUno" parameterType="com.kb.buddiz.dto.Buddiz" resultMap="buddizResultMap">
+        select
+            ub.uno, u.userId, u.name, ub.location, ub.cost,ub.liveInKr,ub.rating,ub.lan,ub.hiredTimes,
+            ub.personality, u.nickname, ub.selfInfo
+        from UserBuddiz ub
+                 join User u on (u.uno = ub.uno)
+
+        where ub.uno = #{uno}
+    </select>
+
+    <!-- 게시판 insert용, selectKey(insert 이후의 key를 받아오는 쿼리문) 추가한 버전 -->
+    <insert id="insertBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">
+<!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
+<!--            SELECT @@identity as uno-->
+<!--        </selectKey>-->
+        insert into Review (nickname, uno, rating, content,createdAt)
+        values(default, #{uno}, #{rating}, #{content})
+    </insert>
+
+<!--    <insert id="insertBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">-->
+<!--        &lt;!&ndash;        <selectKey keyProperty="uno" resultType="int" order="AFTER">&ndash;&gt;-->
+<!--        &lt;!&ndash;            SELECT @@identity as uno&ndash;&gt;-->
+<!--        &lt;!&ndash;        </selectKey>&ndash;&gt;-->
+<!--        insert into Review (nickname, uno, rating, content,createdAt)-->
+<!--        values(default, #{uno}, #{rating}, #{content})-->
+<!--    </insert>-->
+
+    <update id="updateBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">
+        update board set
+                         rating=#{rating}, reviewContent=#{reviewContent}, modify_date = current_timestamp
+        where uno = #{uno}
+    </update>
+
+    <!-- 게시글 삭제용 update문 -->
+    <update id="deleteBuddiz" parameterType="long">
+        update buddiz set
+            status = 'n'
+        where uno = #{uno}
+    </update>
+
+</mapper>
