@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.cctv.mapper.CctvMapper">
+
+<!--    cctv 리스트-->
+    <select id="getCctvList" resultType="com.kb.cctv.dto.CctvDTO">
+        SELECT cid, latitude, longitude
+        FROM cctv
+    </select>
+    <!--    위치기반 cctv 탐색 -->
+    <select id="getCctvByLocation" parameterType="Double" resultType="com.kb.cctv.dto.CctvDTO">
+    <![CDATA[
+        SELECT *
+        FROM (
+                 SELECT *,
+                        (6371 * acos(cos(radians(#{latitude}))
+                                         * cos(radians(latitude))
+                                         * cos(radians(longitude) - radians(#{longitude}))
+                            + sin(radians(#{latitude}))
+                                         * sin(radians(latitude)))) AS distance
+                 FROM cctv
+             ) AS subquery
+        WHERE distance < 1
+        ORDER BY distance;
+        ]]>
+</select>
+
+
+</mapper>

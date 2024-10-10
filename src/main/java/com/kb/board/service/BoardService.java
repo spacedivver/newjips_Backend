@@ -5,7 +5,7 @@ import com.kb.board.mapper.BoardMapper;
 import com.kb.common.pagination.PageInfo;
 import com.kb.common.util.UploadFiles;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-@Log4j
+@Log4j2
 @Service
 @RequiredArgsConstructor
 @PropertySource({"classpath:/application.properties"})

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.chat.mapper.ChatMapper">
+    <resultMap type="com.kb.chat.dto.ChatRoom" id="chatRoomResultMap">
+        <result property="cno" column="cno" />
+        <result property="fromId" column="from_id" />
+        <result property="fromName" column="from_name" />
+        <result property="fromImg" column="from_img" />
+        <result property="toId" column="to_id" />
+        <result property="toName" column="to_name" />
+        <result property="toImg" column="to_img" />
+        <result property="content" column="content" />
+        <result property="senderUnreadCount" column="sender_unread_count" />
+        <result property="receiverUnreadCount" column="receiver_unread_count" />
+        <result property="createAt" column="createAt" />
+        <result property="updateAt" column="updateAt" />
+    </resultMap>
+
+    <resultMap id="chatMsgResultMap" type="com.kb.chat.dto.ChatMsg">
+        <result property="id" column="id" />
+        <result property="roomId" column="room_id" />
+        <result property="content" column="content" />
+        <result property="createAt" column="createAt" />
+        <result property="isFromSender" column="is_from_sender" jdbcType="TINYINT"/>
+    </resultMap>
+
+    <insert id="insertChatRoom" parameterType="com.kb.chat.dto.ChatRoom">
+        <selectKey keyProperty="cno" resultType="long" order="AFTER">
+            SELECT @@identity as cno
+        </selectKey>
+
+        insert into ChatRoom (cno, from_id, to_id, sender_unread_count, receiver_unread_count, content, createAt, updateAt)
+        values (default, #{fromId}, #{toId}, 0, 0, '', default, default)
+    </insert>
+
+    <select id="getChatRoomById" parameterType="long" resultMap="chatRoomResultMap">
+        select c.cno, c.from_id, c.to_id, c.content, c.sender_unread_count, c.receiver_unread_count,
+               c.createAt, c.updateAt, u1.nickname as from_name, u1.profilePic as from_img, u2.nickname as to_name, u2.profilePic as to_img
+        from ChatRoom c
+                 join User u1 on (c.from_id = u1.uno)
+                 join User u2 on (c.to_id = u2.uno)
+        where c.cno = #{ cno }
+    </select>
+
+    <select id="checkChatRoomFromExist" parameterType="com.kb.chat.dto.ChatRoom" resultType="boolean">
+        select COUNT(*) > 0 from ChatRoom as c
+        WHERE c.from_id = #{fromId} and c.to_id = #{toId}
+    </select>
+
+    <select id="checkChatRoomToExist" parameterType="com.kb.chat.dto.ChatRoom" resultType="boolean">
+        select COUNT(*) > 0 from ChatRoom as c
+        WHERE c.from_id = #{toId} and c.to_id = #{fromId}
+    </select>
+
+    <select id="getAllChatRooms" parameterType="long" resultMap="chatRoomResultMap">
+        select
+            c.cno, c.from_id, c.to_id, c.content, c.sender_unread_count, c.receiver_unread_count,
+            c.createAt, c.updateAt, u1.nickname as from_name, u1.profilePic as from_img, u2.nickname as to_name, u2.profilePic as to_img
+        from ChatRoom c
+                 join User u1 on (c.from_id = u1.uno)
+                 join User u2 on (c.to_id = u2.uno)
+        where c.from_id = #{uno} or c.to_id = #{uno}
+        Order by c.updateAt DESC
+    </select>
+
+    <update id="updateChatRoom" parameterType="com.kb.chat.dto.ChatRoom">
+        update ChatRoom set
+            content = #{content}, sender_unread_count = #{senderUnreadCount}, receiver_unread_count = #{receiverUnreadCount}, updateAt = CURRENT_TIMESTAMP
+        where cno = #{cno}
+    </update>
+
+    <update id="updateChatRoomForSelect" parameterType="com.kb.chat.dto.ChatRoom">
+        update ChatRoom set
+            content = #{content}, sender_unread_count = #{senderUnreadCount}, receiver_unread_count = #{receiverUnreadCount}
+        where cno = #{cno}
+    </update>
+
+    <insert id="insertChatMsg" parameterType="com.kb.chat.dto.ChatMsg">
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT @@identity as id
+        </selectKey>
+
+        insert into Message (id, room_id, is_from_sender, content, createAt)
+        values (default, #{roomId}, #{isFromSender}, #{content}, default)
+    </insert>
+
+    <select id="getChatMsgByRoomId" parameterType="long" resultMap="chatMsgResultMap">
+        Select * From Message
+        WHERE room_id = #{roomId}
+        ORDER BY createAt ASC
+    </select>
+</mapper>

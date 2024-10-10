@@ -25,54 +25,62 @@ import java.io.File;
 @PropertySource({"classpath:/application.properties"})
 public class MemberController {
 
-    @Value("#{'${os_type}' == 'win' ? '${file_save_location_win}':'${file_save_location_other}'}")
-    public String LOCATION;
-
     private final MemberService service;
 
-    @GetMapping("/checkid/{id}")
-    public ResponseEntity<Boolean> checkDuplicate(@PathVariable String id) {
-        return ResponseEntity.ok().body(service.checkDuplicate(id));
+    @GetMapping("/checkid/{userId}")
+    public ResponseEntity<Boolean> checkDuplicate(@PathVariable String userId) {
+        return ResponseEntity.ok().body(service.checkDuplicate(userId));
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Member> get(@PathVariable String id) {
-        return ResponseEntity.ok(service.getMember(id));
+    @GetMapping("/{userId}")
+    public ResponseEntity<Member> get(@PathVariable String userId) {
+        Member member = service.getMember(userId);
+        return ResponseEntity.ok(member);
     }
-
-    @GetMapping("/{id}/avatar")
-    public void getAvatar(@PathVariable String id, HttpServletResponse response) {
-        String avatarPath =  LOCATION + "/avatar/" + id + ".png";
-        File file = new File(avatarPath);
-        if (!file.exists()) {
-            file = new File( LOCATION + "/avatar/unknown.png");
-        }
-        UploadFiles.downloadImage(response, file);
-    }
-
 
     @PostMapping("")
     public ResponseEntity<Member> join(MemberDTO memberDTO,
                                        @RequestParam(name = "avatar", required = false) MultipartFile avatar) throws IllegalAccessException {
-        Member member = memberDTO.toMember();
-        return ResponseEntity.ok(service.join(member, avatar));
+        try {
+            Member member = memberDTO.toMember();
+
+            // 성별 초기화
+            if (member.getGender() == null || member.getGender().isEmpty()) {
+                member.setGender("M"); // 기본값으로 남성 설정
+            }
+
+            // 닉네임 기본값 설정
+            // 닉네임 없거나 빈 문자열(사용자가 닉네임을 제공했지만 빈 문자열을 입력한 경우)일 경우
+            if (member.getNickname() == null || member.getNickname().isEmpty()) {
+                member.setNickname("Guest"); // 기본값 설정
+            }
+
+            member.setProfilePic("/avatar/unknown.png"); // 기본 이미지
+            if (avatar != null && !avatar.isEmpty()) {
+                // 업로드된 이미지 처리 로직
+                // 예: member.setProfilePic("/avatar/" + savedImageName);
+            }
+
+            Member createdMember = service.join(member, avatar);
+            return ResponseEntity.status(201).body(createdMember);
+        } catch (IllegalAccessException e) {
+            log.error("회원 가입 중 오류 발생: {}", e.getMessage());
+            return ResponseEntity.badRequest().build(); // 적절한 오류 코드 반환
+        }
+//        return ResponseEntity.ok(service.join(member, avatar));
     }
 
-    @PutMapping("/{id}/changepassword")
+
+    @PutMapping("/{userId}/changepassword")
     public ResponseEntity<?> changePassword(@RequestBody ChangePasswordDTO changePassword) {
         service.changePassword(changePassword);
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("")
     public ResponseEntity<Member> changeProfile(MemberDTO memberDTO,
                 @RequestParam(name = "avatar", required = false) MultipartFile avatar) throws IllegalAccessException {
         Member member = memberDTO.toMember();
         return ResponseEntity.ok(service.update(member, avatar));
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Member> delete(@PathVariable String id) {
-        return ResponseEntity.ok(service.delete(id));
     }
 }

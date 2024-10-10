@@ -57,7 +57,7 @@ public class BoardController {
             @AuthenticationPrincipal Member principal) {
 //        System.out.println(boardDTO);
         Board board = boardDTO.toBoard();
-        board.setMno(principal.getMno());
+        board.setMno(principal.getUno());
         return ResponseEntity.ok(service.createBoard(board, files));
     }
 
@@ -106,7 +106,7 @@ public class BoardController {
                       @AuthenticationPrincipal Member principal) throws Exception {
         BoardReply reply = replyDTO.toReply();
         reply.setBno(bno);
-        reply.setMno(principal.getMno());
+        reply.setMno(principal.getUno());
         BoardReply result = service.createReply(reply);
         return ResponseEntity.ok(result);
     }
@@ -115,7 +115,7 @@ public class BoardController {
     public ResponseEntity<BoardReply> deleteReply(@PathVariable long rno,
                     @AuthenticationPrincipal Member principal) throws Exception {
         BoardReply reply = service.getReply(rno);
-        if(!reply.getMemberId().equals(principal.getId())) {
+        if(!reply.getMemberId().equals(principal.getUserId())) {
             throw new IllegalAccessException();
         }
         int result = service.delteReply(rno);

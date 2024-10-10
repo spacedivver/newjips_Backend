@@ -1,7 +1,7 @@
 package com.multi.security.util;
 
 import com.kb.security.util.JwtProcessor;
-import lombok.extern.log4j.Log4j;
+import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import com.kb._config.RootConfig;
@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = { RootConfig.class, SecurityConfig.class })
-@Log4j
+@Log4j2
 class JwtProcessorTest {
     @Autowired
     JwtProcessor jwtProcessor;

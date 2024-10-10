@@ -24,7 +24,7 @@ public class LoginSuccessHandler implements AuthenticationSuccessHandler {
                                         Authentication authentication) throws IOException, ServletException {
         // 인증 결과 Principal
         Member member = (Member) authentication.getPrincipal();
-        String token = jwtProcessor.generateToken(member.getUsername());
+        String token = jwtProcessor.generateToken(member.getUserId());
         member.setToken(token);
         JsonResponse.send(response, member);
     }

@@ -2,6 +2,7 @@ package com.kb.member.service;
 
 import com.kb.member.dto.Auth;
 import com.kb.member.dto.ChangePasswordDTO;
+import com.kb.util.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import com.kb.member.dto.Member;
@@ -30,96 +31,83 @@ public class MemberService{
 
     final PasswordEncoder passwordEncoder;
     final MemberMapper mapper;
-
+    final S3Uploader s3Uploader;
+    final long MAX_FILE_SIZE = 5 * 1024 * 1024;
+    final String default_img = "https://cdn-nj.s3.ap-northeast-2.amazonaws.com/default.jpg";
 
     public Member login(Member member) {
-        Member saveMember = mapper.selectById(member.getId());
+        Member saveMember = mapper.selectById(member.getUserId());
         if(passwordEncoder.matches(member.getPassword(), saveMember.getPassword())) {
-            saveMember.setPassword("");
-            saveMember.setMno(0);
+            saveMember.setPassword(""); //비밀번호 제거
+            saveMember.setUno(0); //회원 번호 초기화
             return saveMember;
         }else{
-            return null;
+            return null; //인증 실패
         }
     }
 
-    public boolean checkDuplicate(String id) {
-        Member member = mapper.selectById(id);
-        return member != null;
+    public boolean checkDuplicate(String userId) {
+        Member member = mapper.selectById(userId);
+        return member != null; //중복 확인
     }
 
-    public Member getMember(String id) {
-        return Optional.ofNullable(mapper.selectById(id))
+    public Member getMember(String userId) {
+        return Optional.ofNullable(mapper.selectById(userId))
                         .orElseThrow(NoSuchElementException::new);
-    }
-
-    private void saveAvatar(MultipartFile avatar, String id) {
-        //아바타 업로드
-        if(avatar != null && !avatar.isEmpty()) {
-            File dir = new File(LOCATION + "/avatar");
-            if(!dir.exists()){
-                dir.mkdirs();
-            }
-            File dest = new File( LOCATION + "/avatar", id + ".png");
-            if(!dest.exists()){
-                dest.delete();
-            }
-            try {
-                avatar.transferTo(dest);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
     }
 
     @Transactional(rollbackFor = Exception.class)
     public Member join(Member member, MultipartFile avatar) throws IllegalAccessException {
         if(member.checkRequiredValue()){
-            throw new IllegalAccessException();
+            throw new IllegalAccessException("필수 값이 누락되었습니다."); //예외 처리
         }
-        member.setPassword(passwordEncoder.encode(member.getPassword()));
+        member.setPassword(passwordEncoder.encode(member.getPassword())); //비밀번호 암호화
+        member.setProfilePic(default_img);
+
         int result = mapper.insertMember(member);
         if(result != 1){
-            throw new IllegalAccessException();
+            throw new IllegalAccessException("회원 가입에 실패했습니다."); //예외 처리
         }
-        Auth auth = new Auth(member.getId(), "ROLE_MEMBER");
-        result = mapper.insertAuth(auth);
-        if(result != 1){
-            throw new IllegalAccessException();
-        }
-        saveAvatar(avatar, member.getUsername());
-        return mapper.selectById(member.getId());
+
+        return mapper.selectById(member.getUserId());
     }
 
-    public Member update(Member updateMember, MultipartFile avatar) throws IllegalAccessException {
-        Member oldMember = mapper.selectById(updateMember.getId());
-        if(!passwordEncoder.matches(updateMember.getPassword(),oldMember.getPassword())) {
-            throw new PasswordMissmatchException();
+    public Member update(Member updateMember, MultipartFile file) throws IllegalAccessException {
+        Member oldMember = mapper.selectByUno(updateMember.getUno());
+        updateMember.setUno(oldMember.getUno());
+        if(file != null && !file.isEmpty()) {
+            if (file.getSize() > MAX_FILE_SIZE) {
+                throw new IllegalArgumentException("파일 크기는 최대 5MB 입니다.");
+            }
+
+            if (!oldMember.getProfilePic().equals(default_img)) {
+                s3Uploader.deleteFile(oldMember.getProfilePic());
+            }
+
+            // 이미지 업로드
+            String url = s3Uploader.saveFile(file);
+            updateMember.setProfilePic(url);
+        } else {
+            updateMember.setProfilePic(default_img);
         }
-        updateMember.setMno(oldMember.getMno());
         mapper.updateMember(updateMember);
-        if(avatar != null && !avatar.isEmpty()) {
-            saveAvatar(avatar, oldMember.getId());
-        }
-        return mapper.selectById(updateMember.getId());
-    }
-
-    public Member delete(String id) {
-        Member member = mapper.selectById(id);
-        mapper.deleteMember(member.getMno());
-        return member;
+        return mapper.selectByUno(updateMember.getUno());
     }
 
     public void changePassword(ChangePasswordDTO changePassword) {
-        Member member = mapper.selectById(changePassword.getId());
-//        System.out.println(changePassword);
+        Member member = mapper.selectByUno(changePassword.getUno());
+
         if(!passwordEncoder.matches(
-                changePassword.getOldPassword(),
-                member.getPassword()
+            changePassword.getOldPassword(),
+            member.getPassword()
         )) {
               throw new PasswordMissmatchException();
         }
-        changePassword.setNewPassword(passwordEncoder.encode(changePassword.getNewPassword()));
-        mapper.updatePassword(changePassword);
+
+        member.setPassword(passwordEncoder.encode(changePassword.getNewPassword()));
+        int result = mapper.updatePassword(member);
+        if(result != 1){
+            throw new NoSuchElementException();
+        }
     }
 }
