@@ -16,4 +16,5 @@ public class Review {
     private String reviewContent;
     private Date createdAt;
     private long rating;
+
 }

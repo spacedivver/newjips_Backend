@@ -17,4 +17,5 @@ public interface BuddizMapper {
     int deleteBuddiz(long uno);
     int selectReviewCount(long uno);
 
+
 }

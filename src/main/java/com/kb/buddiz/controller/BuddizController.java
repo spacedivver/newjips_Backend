@@ -60,6 +60,15 @@ public class BuddizController {
         return ResponseEntity.ok(service.createBuddiz(buddiz));
     }
 
+//    @PostMapping("/reviewWish/{uno}")
+//    public ResponseEntity<Buddiz> reviewWish(
+//            BuddizDTO buddizDTO,
+//            @AuthenticationPrincipal Member principal) {
+//        Buddiz buddiz = buddizDTO.toReview();
+//        buddiz.setUno(principal.getUno());
+//        return ResponseEntity.ok(service.createBuddiz(buddiz));
+//    }
+
     @PutMapping("/{uno}")
     public ResponseEntity<Buddiz> update(@PathVariable long uno, BuddizDTO buddizDTO) {
         Buddiz buddiz = buddizDTO.toBuddiz();

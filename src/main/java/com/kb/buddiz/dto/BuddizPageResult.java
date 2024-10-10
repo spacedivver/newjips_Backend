@@ -18,4 +18,5 @@ public class BuddizPageResult {
     private PageInfo pageInfo;
     private int totalCount;
 
+
 }

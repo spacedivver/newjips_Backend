@@ -134,12 +134,20 @@
 
     <!-- 게시판 insert용, selectKey(insert 이후의 key를 받아오는 쿼리문) 추가한 버전 -->
     <insert id="insertBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">
-        <selectKey keyProperty="uno" resultType="int" order="AFTER">
-            SELECT @@identity as uno
-        </selectKey>
+<!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
+<!--            SELECT @@identity as uno-->
+<!--        </selectKey>-->
         insert into Review (nickname, uno, rating, content,createdAt)
         values(default, #{uno}, #{rating}, #{content})
     </insert>
+
+<!--    <insert id="insertBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">-->
+<!--        &lt;!&ndash;        <selectKey keyProperty="uno" resultType="int" order="AFTER">&ndash;&gt;-->
+<!--        &lt;!&ndash;            SELECT @@identity as uno&ndash;&gt;-->
+<!--        &lt;!&ndash;        </selectKey>&ndash;&gt;-->
+<!--        insert into Review (nickname, uno, rating, content,createdAt)-->
+<!--        values(default, #{uno}, #{rating}, #{content})-->
+<!--    </insert>-->
 
     <update id="updateBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">
         update board set

@@ -13,4 +13,5 @@ public class Wish {
     private long likeuno;
     private Date datetime;
     private long likeduno;
+
 }
