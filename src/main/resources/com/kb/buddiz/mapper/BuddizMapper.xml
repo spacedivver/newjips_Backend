@@ -19,7 +19,7 @@
         <result property="profilePic" column="profilePic"/>
         <result property="avg" column="avg"/>
 
-<!--        외부조인-->
+        <!--        외부조인-->
         <result property="gender" column="gender"/>
         <result property="userId" column="userId"/>
         <result property="name" column="name"/>
@@ -27,13 +27,13 @@
         <result property="reviewer" column="reviewer"/>
     </resultMap>
 
-<!--    <resultMap type="com.kb.buddiz.dto.Buddiz" id="reviewResultMap" extends="buddizResultMap">-->
-<!--        <collection property="reviewList"-->
-<!--                    javaType="arraylist"-->
-<!--                    ofType="com.kb.buddiz.dto.Review"-->
-<!--                    column="uno"-->
-<!--                    select="selectReviewByUno"/>-->
-<!--    </resultMap>-->
+    <!--    <resultMap type="com.kb.buddiz.dto.Buddiz" id="reviewResultMap" extends="buddizResultMap">-->
+    <!--        <collection property="reviewList"-->
+    <!--                    javaType="arraylist"-->
+    <!--                    ofType="com.kb.buddiz.dto.Review"-->
+    <!--                    column="uno"-->
+    <!--                    select="selectReviewByUno"/>-->
+    <!--    </resultMap>-->
 
     <resultMap type="com.kb.buddiz.dto.Review" id="reviewResultMap">
         <result property="reviewer" column="reviewer"/>
@@ -107,32 +107,28 @@
     </select>
 
     <select id="selectReviewByUno" parameterType="long" resultMap="reviewResultMap">
+
         <![CDATA[
         select
-            r.reviewContent, r.createdAt, r.rating,
-            (u.nickname as reviewer
-                from Review r2
-                join User u on r2.reviewerUno = u.uno
-            WHERE r2.reviewUno = r.reviewUnofdsdf                )
+            r.nickname as reviewer, r.reviewContent, r.createdAt, r.rating
         from Review r
-        where r.uno = #{uno}
-        GROUP BY r.nickname, r.reviewContent, r.createdAt, r.rating]]>
+        where r.uno = #{uno} ]]>
 
-        SELECT
-            r.reviewContent,
-            r.createdAt,
-            r.rating,
-            (SELECT u.nickname
-             FROM Review r2
-                      JOIN User u ON r2.reviewerUno = u.uno
-             WHERE r2.reviewUno = r.reviewUno
-            ) AS reviewer
-        FROM
-            Review r
-        WHERE
-            r.uno = #{uno}
-        GROUP BY
-            r.reviewContent, r.createdAt, r.rating;
+<!--        <![CDATA[-->
+<!--        SELECT-->
+<!--            r.reviewContent, r.createdAt, r.rating, u.nickname-->
+<!--        FROM-->
+<!--            Review r-->
+<!--        WHERE-->
+<!--            r.uno = #{uno}-->
+<!--        GROUP BY-->
+<!--            r.reviewContent, r.createdAt, r.rating;]]>-->
+
+--         (SELECT u.nickname
+--          FROM Review r2
+--                   JOIN User u ON r2.uno = u.uno
+--          WHERE r2.reviewUno = r.reviewUno
+--         ) AS reviewer
 
 
     </select>
@@ -158,9 +154,9 @@
 
     <!-- 게시판 insert용, selectKey(insert 이후의 key를 받아오는 쿼리문) 추가한 버전 -->
     <insert id="insertBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">
-<!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
-<!--            SELECT @@identity as uno-->
-<!--        </selectKey>-->
+        <!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
+        <!--            SELECT @@identity as uno-->
+        <!--        </selectKey>-->
         insert into Review ( uno, rating, reviewContent, createdAt, reviewrUno)
         values(#{uno}, #{rating}, #{reviewContent}, NOW(), #{reviewerUno})
     </insert>
