@@ -113,6 +113,12 @@
 
     </select>
 
+<!--    <select id="selectReviewAvg" parameterType="com.kb.buddiz.dto.Buddiz" resultType="double">-->
+<!--        select AVG(r.rating)-->
+<!--        from Review r-->
+<!--        where r.uno = #{uno}-->
+<!--    </select>-->
+
 
 
     <!-- 상세보기 용도, 모든 인자를 가져와야한다. -->

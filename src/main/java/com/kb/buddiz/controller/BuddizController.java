@@ -51,13 +51,12 @@ public class BuddizController {
 //        return ResponseEntity.ok(service.getReview(uno));
 //    }
 
-    @PostMapping("")
+    @PostMapping("/reviewAdd/{uno}")
     public ResponseEntity<Buddiz> create(
             BuddizDTO buddizDTO,
             @AuthenticationPrincipal Member principal) {
-//        System.out.println(buddizDTO);
         Buddiz buddiz = buddizDTO.toBuddiz();
-        buddiz.setUno(principal.getUno());
+//        buddiz.setUno(principal.getUno());
         return ResponseEntity.ok(service.createBuddiz(buddiz));
     }
 

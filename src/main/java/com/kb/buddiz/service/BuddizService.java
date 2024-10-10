@@ -24,12 +24,11 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-@Log4j
+
 @Service
 @RequiredArgsConstructor
 @PropertySource({"classpath:/application.properties"})
 public class BuddizService {
-    @Value("#{'${os_type}' == 'win' ? '${file_save_location_win}/buddiz':'${file_save_location_other}/buddiz'}")
     public String BASE_DIR;
 
     private final BuddizMapper mapper;
@@ -61,9 +60,7 @@ public class BuddizService {
 
     @Transactional
     public Buddiz getBuddiz(long uno) {
-        log.info("get......" + uno);
         Buddiz buddiz = mapper.selectBuddizByUno(uno);
-        log.info("========================" + buddiz);
         return Optional.of(buddiz)
                 .orElseThrow(NoSuchElementException::new);
     }
@@ -79,7 +76,6 @@ public class BuddizService {
 
     @Transactional(rollbackFor = Exception.class) // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
     public Buddiz createBuddiz(Buddiz buddiz) {
-        log.info("create......" + buddiz);
         int result = mapper.insertBuddiz(buddiz);
         if (result != 1) {
             throw new NoSuchElementException();
@@ -90,7 +86,6 @@ public class BuddizService {
 
     @Transactional
     public Buddiz updateBuddiz(Buddiz buddiz) {
-        log.info("update...... " + buddiz);
 //        Board oldBoard = getBoard(board.getBno());
 
         int result = mapper.updateBuddiz(buddiz);
@@ -102,7 +97,6 @@ public class BuddizService {
 
     @Transactional
     public Buddiz deleteBuddiz(long uno) {
-        log.info("delete...." + uno);
         Buddiz buddiz = getBuddiz(uno);
 
         int result = mapper.deleteBuddiz(uno);
