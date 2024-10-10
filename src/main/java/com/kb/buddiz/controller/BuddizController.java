@@ -69,8 +69,10 @@ public class BuddizController {
             BuddizDTO buddizDTO,
             @AuthenticationPrincipal Member principal) {
         Buddiz buddiz = buddizDTO.toReview();
-        buddiz.setLikedUno(principal.getUno());
-        buddiz.setLikeUno(uno);
+        buddiz.setUno(principal.getUno());
+        buddiz.setWished_id(uno);
+        System.out.println(buddiz.getUno());
+        System.out.println(buddiz.getWished_id());
         return ResponseEntity.ok(service.createWish(buddiz));
     }
 

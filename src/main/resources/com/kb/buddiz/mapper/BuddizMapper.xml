@@ -166,8 +166,8 @@
         <!--        <selectKey keyProperty="uno" resultType="int" order="AFTER">-->
         <!--            SELECT @@identity as uno-->
         <!--        </selectKey>-->
-        insert into Review (nickname, uno, rating, content,createdAt)
-        values(default, #{uno}, #{rating}, #{content})
+        insert into Wish (uno, wished_id, target_type)
+        values (#{uno}, #{wished_id}, 'B')
     </insert>
 
     <update id="updateBuddiz" parameterType="com.kb.buddiz.dto.Buddiz">

@@ -24,8 +24,8 @@ public class Buddiz {
     private String lan;
     private long reviewcnt;
     private String location;
-    private long likedUno; // 찜 대상 uno
-    private long likeUno; // 찜을 수행한 uno
+    private long wished_id; // 찜 대상 uno
+//    private long likeUno; // 찜을 수행한 uno
     private String profilePic;
     private double avg;
 

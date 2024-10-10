@@ -62,7 +62,9 @@ public class BuddizService {
 
     @Transactional
     public Buddiz getBuddiz(long uno) {
+        System.out.println("get Buddiz "+uno);
         Buddiz buddiz = mapper.selectBuddizByUno(uno);
+        System.out.println("get Buddiz "+buddiz);
         return Optional.of(buddiz)
                 .orElseThrow(NoSuchElementException::new);
     }
@@ -87,11 +89,13 @@ public class BuddizService {
 
     @Transactional(rollbackFor = Exception.class) // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
     public Buddiz createWish(Buddiz buddiz) {
-        int result = mapper.insertBuddiz(buddiz);
+        int result = mapper.insertWish(buddiz);
+        System.out.println("service"+buddiz.getUno());
+        System.out.println("service"+buddiz.getWished_id());
         if (result != 1) {
             throw new NoSuchElementException();
         }
-        return getBuddiz(buddiz.getUno());
+        return getBuddiz(buddiz.getWished_id()); // 수정된 부분
     }
 
 
