@@ -20,7 +20,6 @@ public class ChatService {
     private final ChatMapper mapper;
 
     public List<ChatRoom> getChatRooms(Long uno) {
-        log.info("Chat : getChatRooms..............");
         List<ChatRoom> chatRooms = mapper.getAllChatRooms(uno);
         if (!chatRooms.isEmpty()) {
             chatRooms.forEach(chatRoom -> {
@@ -50,6 +49,8 @@ public class ChatService {
     public ChatRoom getChatRoomByCno(long cno) {
         log.info("Chat : getChatRoomByCno...........");
         ChatRoom chatRoom = mapper.getChatRoomById(cno);
+        if (chatRoom == null)
+            throw new NoSuchElementException("Chat room not found");
         return chatRoom;
     }
 
@@ -80,7 +81,8 @@ public class ChatService {
             throw new NoSuchElementException("failed to send msg");
 
         // 채팅방 상태 변경 - 안읽은 메시지 처리
-        ChatRoom chatRoom = mapper.getChatRoomById(chatMsg.getRoomId());
+        ChatRoom chatRoom = getChatRoomByCno(chatMsg.getRoomId());
+
         if (chatMsg.isFromSender()) {   // Sender가 보낸 쪽지
             chatRoom.setReceiverUnreadCount(chatRoom.getReceiverUnreadCount() + 1);
             chatRoom.setSenderUnreadCount(0);
@@ -105,6 +107,7 @@ public class ChatService {
                 chatRoom.setSenderUnreadCount(0);
             } else if (chatRoom.getToId() == uno) { // Receiver가 요청
                 chatRoom.setReceiverUnreadCount(0);
+
             } else {
                 throw new NoSuchElementException("bad request");
             }
