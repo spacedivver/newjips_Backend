@@ -14,17 +14,13 @@ import java.util.Date;
 @Data
 @Builder
 public class Board {
-    private long bno;
-    private long mno;
-    private String type;
+
+    private long nno;
     private String title;
     private String content;
-    private String memberId;
-    private String memberName;
-    private int readCount;
-    private String status;
-    private Date createDate;
-    private Date modifyDate;
+    private Date createdAt;
+    private String lan;
+    private String thumb_img;
 
     private ArrayList<BoardReply> replyList;
     private ArrayList<BoardAttachFile> boardAttachFileList;
