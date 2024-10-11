@@ -46,7 +46,8 @@
         <![CDATA[
     select
          ub.uno, u.name, ub.rating, ub.liveInKr, ub.personality, u.profilePic,
-         (select count(reviewContent) from Review r where ub.uno=r.uno) as reviewcnt
+         (select count(reviewContent) from Review r where ub.uno=r.uno) as reviewcnt,
+         (SELECT AVG(r2.rating) as avg FROM Review r2 WHERE r2.uno = ub.uno) as avg
     from UserBuddiz ub
     left outer join User u on ub.uno = u.uno
      where 1=1  ]]>
