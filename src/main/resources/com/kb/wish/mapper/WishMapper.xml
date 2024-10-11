@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kb.wish.mapper.WishMapper">
+    <resultMap id="wishResultMap" type="com.kb.wish.dto.Wish">
+        <result property="wishid" column="wishid"/>
+        <result property="uno" column="uno"/>
+        <result property="wishedId" column="wished_id"/>
+        <result property="targetType" column="target_type"/>
+        <result property="datetime" column="datetime"/>
+    </resultMap>
+
+    <resultMap id="wishBuddizResultMap" type="com.kb.wish.dto.WishBuddiz">
+        <result property="wishid" column="wishid"/>
+        <result property="targetType" column="target_type"/>
+        <result property="content" column="content"/>
+        <result property="datetime" column="datetime"/>
+        <result property="uno" column="uno"/>
+        <result property="wishedId" column="wished_id"/>
+
+        <result property="wishNickname" column="wishNickname"/>
+        <result property="wishProfilePic" column="wishProfilePic"/>
+        <result property="wishPersonality" column="wishPersonality"/>
+    </resultMap>
+
+    <resultMap id="wishEstateResultMap" type="com.kb.wish.dto.WishEstate">
+        <result property="wishid" column="wishid"/>
+        <result property="targetType" column="targetType"/>
+        <result property="content" column="content"/>
+        <result property="datetime" column="datetime"/>
+        <result property="uno" column="uno"/>
+        <result property="wishedId" column="wished_id"/>
+
+        <result property="tradetype" column="tradetype"/>
+        <result property="deposit" column="deposit"/>
+        <result property="monthlyPee" column="monthlyPee"/>
+        <result property="img" column="first_img"/>
+    </resultMap>
+
+    <insert id="insertWish" parameterType="com.kb.wish.dto.Wish">
+        <selectKey keyColumn="likeid" resultType="long" order="AFTER">
+            SELECT @@identity as wishid
+        </selectKey>
+
+        insert into Wish (wishid, target_type, datetime, uno, wished_id)
+        values (default, #{targetType}, default, #{uno},#{wishedId})
+    </insert>
+
+    <select id="selectWishById" parameterType="long" resultMap="wishResultMap">
+        select w.wishid, w.target_type, w.content, w.datetime, w.uno, w.wished_id
+        from Wish AS w
+        where w.wishid = #{wishid}
+    </select>
+
+    <select id="selectBuddizWishList" parameterType="long" resultMap="wishBuddizResultMap">
+        select w.wishid, w.target_type, w.content, w.datetime, w.uno, w.wished_id,
+                U.nickname AS wishNickname,
+                U.profilePic AS wishProfilPic, UB.personality AS wishPersonality
+        from Wish AS w
+            JOIN User U ON w.wished_id = U.uno
+            JOIN UserBuddiz UB ON w.wished_id = UB.uno
+        where w.uno = #{uno} and w.target_type = 'B'
+        Order By w.datetime DESC
+    </select>
+
+    <select id="selectEstateWishList" parameterType="long" resultMap="wishEstateResultMap">
+        select w.wishid, w.target_type, w.content, w.uno, w.wished_id,
+                e.deposit, e.tradetype, e.monthlyPee, SUBSTRING_INDEX(e.img, ',', 1) AS first_img
+            from Wish AS w
+                JOIN Estate AS e ON e.eno = w.wished_id
+        where w.uno = #{uno} and w.target_type = 'E'
+        Order By w.datetime DESC
+    </select>
+</mapper>
