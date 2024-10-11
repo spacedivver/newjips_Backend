@@ -57,7 +57,7 @@
     <select id="selectBuddizWishList" parameterType="long" resultMap="wishBuddizResultMap">
         select w.wishid, w.target_type, w.content, w.datetime, w.uno, w.wished_id,
                 U.nickname AS wishNickname,
-                U.profilePic AS wishProfilPic, UB.personality AS wishPersonality
+                U.profilePic AS wishProfilePic, UB.personality AS wishPersonality
         from Wish AS w
             JOIN User U ON w.wished_id = U.uno
             JOIN UserBuddiz UB ON w.wished_id = UB.uno
