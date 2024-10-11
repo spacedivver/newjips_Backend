@@ -19,5 +19,5 @@ public interface BuddizMapper {
     int insertWish(Buddiz buddiz);
     double selectReviewAvg(long uno);
 
-
+    int checkPicked(Buddiz buddiz);
 }

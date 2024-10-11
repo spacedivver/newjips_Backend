@@ -1,5 +1,6 @@
 package com.kb.buddiz.controller;
 
+import com.amazonaws.services.kms.model.AlreadyExistsException;
 import com.kb.buddiz.dto.*;
 import com.kb.buddiz.service.BuddizService;
 import com.kb.member.dto.Member;
@@ -69,11 +70,16 @@ public class BuddizController {
             @PathVariable long uno,
             BuddizDTO buddizDTO,
             @AuthenticationPrincipal Member principal) {
+        if (uno == principal.getUno())
+            return ResponseEntity.badRequest().build();
+
         Buddiz buddiz = buddizDTO.toReview();
         buddiz.setUno(principal.getUno());
         buddiz.setWished_id(uno);
-        System.out.println(buddiz.getUno());
-        System.out.println(buddiz.getWished_id());
+
+        if (!service.checkUnPicked(buddiz))
+            return ResponseEntity.badRequest().build();
+
         return ResponseEntity.ok(service.createWish(buddiz));
     }
 
