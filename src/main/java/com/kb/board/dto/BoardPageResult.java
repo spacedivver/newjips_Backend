@@ -16,6 +16,6 @@ public class BoardPageResult {
     private List<Board> boardList;
     private BoardParam boardParam;
     private PageInfo pageInfo;
-    private List<BoardCategory> boardCategory;
+//    private List<BoardCategory> boardCategory;
     private int totalCount;
 }

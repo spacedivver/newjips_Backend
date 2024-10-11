@@ -17,7 +17,7 @@ public class BoardDTO {
     private String content;
 
     public Board toBoard() {
-        return Board.builder().type(type).title(title).content(content).build();
+        return Board.builder().title(title).content(content).build();
     }
 }
 
