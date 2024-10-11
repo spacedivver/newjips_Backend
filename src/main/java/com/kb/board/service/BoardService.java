@@ -41,26 +41,15 @@ public class BoardService {
 
     public BoardPageResult getBoardList(BoardParam boardParam) {
         int totalSize = mapper.selectBoardCount(boardParam);
+        System.out.println(boardParam.getAmount());
         int listLimit = boardParam.getAmount() == 0 ? LIST_LIMIT : boardParam.getAmount();
         PageInfo pageInfo = new PageInfo(boardParam.getPage(), totalSize, listLimit, PAGE_LIMIT);
 //        boardParam.setLimit(pageInfo.getListLimit());
         boardParam.setLimit(6);
-//        boardParam.setOffset(pageInfo.getStartList() - 1);
         boardParam.setOffset(pageInfo.getStartList() - 1);
-
-        System.out.println("total size");
-        System.out.println(totalSize);
-        System.out.println("limit");
-        System.out.println(boardParam.getLimit());
-        System.out.println("offset");
-        System.out.println(boardParam.getOffset());
 
 
         List<Board> boardList = mapper.selectBoardList(boardParam);
-
-        System.out.println("boardlist");
-        System.out.println(boardList);
-
         System.out.println(boardList);
         if (boardList == null || boardList.isEmpty()) {
             boardList = new ArrayList<>();
@@ -68,110 +57,14 @@ public class BoardService {
         return new BoardPageResult(boardList, boardParam, pageInfo, totalSize);
     }
 
-//    @Transactional
-//    public Board getBoard(long bno) {
-//        log.info("get......" + bno);
-//        Board board = mapper.selectBoardByBno(bno);
-//        board.setReadCount(board.getReadCount() + 1);
-//        mapper.updateReadCount(board);
-//        log.info("========================" + board);
-//        return Optional.of(board)
-//                .orElseThrow(NoSuchElementException::new);
-//    }
+    @Transactional
+    public Board getBoard(long nno) {
+        Board board = mapper.selectBoardByNno(nno);
+        board.setReadCount(board.getReadCount() + 1);
 
-//    @Transactional(rollbackFor = Exception.class) // 2개 이상의 insert 문이 실행될 수 있으므로 트랜잭션 처리 필요
-//    public Board createBoard(Board board, List<MultipartFile> files) {
-//        log.info("create......" + board);
-//        int result = mapper.insertBoard(board);
-//        if (result != 1) {
-//            throw new NoSuchElementException();
-//        }
-//        // 파일 업로드 처리
-//        if (files != null && !files.isEmpty()) {
-//            upload(board.getBno(), files);
-//        }
-//        return getBoard(board.getBno());
-//    }
+        log.info("========================" + board);
+        return Optional.of(board)
+                .orElseThrow(NoSuchElementException::new);
+    }
 
-
-//    private void upload(long bno, List<MultipartFile> files) {
-//        for (MultipartFile part : files) {
-//            if (part.isEmpty()) continue;
-//            try {
-//                String renameFileName = UploadFiles.upload(BASE_DIR, part);
-//                BoardAttachFile attach = new BoardAttachFile(0, bno, part.getOriginalFilename(), renameFileName, part.getContentType(), part.getSize(), null);
-//                mapper.insertAttachFile(attach);
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-//    }
-
-//    public void deleteFile(String savePath, BoardAttachFile boardAttachFile) {
-//        File file = new File(savePath + "/" + boardAttachFile.getRenamedFilename());
-//        if (file.exists()) {
-//            file.delete();
-//        }
-//    }
-
-//
-//    @Transactional
-//    public Board updateBoard(Board board, List<MultipartFile> files) {
-//        log.info("update...... " + board);
-////        Board oldBoard = getBoard(board.getBno());
-//
-//        int result = mapper.updateBoard(board);
-//        if (result != 1) {
-//            throw new NoSuchElementException();
-//        }
-//
-//        // 파일 업로드 처리
-//        if (files != null && !files.isEmpty()) {
-//            upload(board.getBno(), files);
-//        }
-//
-//        return getBoard(board.getBno());
-//    }
-//
-//
-//    @Transactional
-//    public Board deleteBoard(long bno) {
-//        log.info("delete...." + bno);
-//        Board board = getBoard(bno);
-//
-//        List<BoardAttachFile> oldFiles = board.getBoardAttachFileList();
-//        for (BoardAttachFile old : oldFiles) {
-//            deleteFile(BASE_DIR, old);
-//        }
-//
-//        int result = mapper.deleteBoard(bno);
-//        if (result != 1) {
-//            throw new NoSuchElementException();
-//        }
-//        return board;
-//    }
-//
-//    public BoardAttachFile getAttachment(long fno) {
-//        return mapper.selectAttachFileByFno(fno);
-//    }
-//
-//    public boolean deleteAttachment(long fno) {
-//        BoardAttachFile attachFile =  mapper.selectAttachFileByFno(fno);
-//        deleteFile(BASE_DIR, attachFile);
-//        return mapper.deleteAttachFile(fno) == 1;
-//    }
-//
-//    public BoardReply createReply(BoardReply reply) {
-//        int result = mapper.insertReply(reply);
-//        reply = mapper.selectReplyByRno(reply.getRno());
-//        return reply;
-//    }
-//
-//    public BoardReply getReply(long rno) {
-//        return mapper.selectReplyByRno(rno);
-//    }
-//
-//    public int delteReply(long rno) {
-//        return mapper.deleteReply(rno);
-//    }
 }

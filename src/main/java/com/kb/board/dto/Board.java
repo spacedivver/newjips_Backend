@@ -21,6 +21,7 @@ public class Board {
     private Date createdAt;
     private String lan;
     private String thumb_img;
+    private int readCount;
 
     private ArrayList<BoardReply> replyList;
     private ArrayList<BoardAttachFile> boardAttachFileList;
