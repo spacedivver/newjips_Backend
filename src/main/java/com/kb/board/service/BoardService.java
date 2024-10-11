@@ -32,13 +32,6 @@ public class BoardService {
     private static final int PAGE_LIMIT = 5;
     private static final int LIST_LIMIT = 12; // 게시글 보여질 list 수
 
-//    public List<BoardCategory> getCategoryList() {
-//        if (categoryList == null) {
-//            categoryList = mapper.selectBoardCategory();
-//        }
-//        return categoryList;
-//    }
-
     public BoardPageResult getBoardList(BoardParam boardParam) {
         int totalSize = mapper.selectBoardCount(boardParam);
         System.out.println(boardParam.getAmount());
