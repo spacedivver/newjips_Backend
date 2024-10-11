@@ -8,5 +8,6 @@ import lombok.Setter;
 public class PopularBuddizDTO {
     private String nickname;
     private String imgFile;
+    private int uno;
     private double averageRating;
 }
