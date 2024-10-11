@@ -5,24 +5,39 @@
 
 <mapper namespace="com.kb.buddizintro.mapper.BuddizIntroMapper">
 
+    <!-- Insert new Buddiz introduction -->
+    <insert id="insertBuddizIntro" parameterType="com.kb.buddizintro.dto.BuddizIntroDTO">
+        INSERT INTO UserBuddiz
+        (uno, liveInKr, personality, cost, hiredTimes, rating, selfInfo, lan, location, useLan)
+        VALUES
+            (#{uno}, #{liveInKr}, #{personality}, #{cost}, #{hiredTimes}, #{rating}, #{selfInfo}, #{lan}, #{location}, #{useLan})
+    </insert>
+
     <!-- Query to get all Buddiz introductions -->
     <select id="getAllBuddizIntro" resultType="com.kb.buddizintro.dto.BuddizIntroDTO">
-        SELECT uno, liveInKr, personality, cost, hiredTimes, rating, selfInfo, lan, useLan
+        SELECT uno, liveInKr, personality, cost, hiredTimes, rating, selfInfo, lan, location, useLan
         FROM UserBuddiz
     </select>
 
     <!-- Query to get Buddiz introduction by unique number -->
     <select id="getBuddizIntro" parameterType="Integer" resultType="com.kb.buddizintro.dto.BuddizIntroDTO">
-        SELECT uno, liveInKr, personality, cost, hiredTimes, rating, selfInfo, lan, useLan
+        SELECT uno, liveInKr, personality, cost, hiredTimes, rating, selfInfo, lan, location, useLan
         FROM UserBuddiz
         WHERE uno = #{uno}
     </select>
 
-    <!-- Query to update Buddiz introduction -->
+    <!-- Update existing Buddiz introduction -->
     <update id="updateBuddizIntro" parameterType="com.kb.buddizintro.dto.BuddizIntroDTO">
         UPDATE UserBuddiz
-        SET selfInfo = #{selfInfo}, personality = #{personality}, cost = #{cost}, hiredTimes = #{hiredTimes},
-            rating = #{rating}, lan = #{lan}, useLan = #{useLan}
+        SET liveInKr = #{liveInKr},
+            personality = #{personality},
+            cost = #{cost},
+            hiredTimes = #{hiredTimes},
+            rating = #{rating},
+            selfInfo = #{selfInfo},
+            lan = #{lan},
+            location = #{location},
+            useLan = #{useLan}
         WHERE uno = #{uno}
     </update>
 

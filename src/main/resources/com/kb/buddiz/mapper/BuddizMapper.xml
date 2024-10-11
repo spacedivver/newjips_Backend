@@ -186,4 +186,8 @@
         where uno = #{uno}
     </update>
 
+    <select id="checkPicked" parameterType="com.kb.buddiz.dto.Buddiz" resultType="int">
+        select COUNT(*) from Wish
+        where uno = #{uno} and wished_id = #{wished_id}
+    </select>
 </mapper>
