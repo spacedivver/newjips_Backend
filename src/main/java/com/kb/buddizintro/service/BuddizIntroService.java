@@ -25,7 +25,15 @@ public class BuddizIntroService {
         return buddizMapper.getBuddizIntro(uno);
     }
 
-    public void updateBuddizIntro(BuddizIntroDTO buddizDTO) {
-        buddizMapper.updateBuddizIntro(buddizDTO);
+    public void saveOrUpdateBuddizIntro(BuddizIntroDTO buddizDTO) {
+        // Check if a profile already exists
+        BuddizIntroDTO existingProfile = buddizMapper.getBuddizIntro(buddizDTO.getUno());
+        if (existingProfile != null) {
+            // Update the existing profile
+            buddizMapper.updateBuddizIntro(buddizDTO);
+        } else {
+            // Insert a new profile
+            buddizMapper.insertBuddizIntro(buddizDTO);
+        }
     }
 }
