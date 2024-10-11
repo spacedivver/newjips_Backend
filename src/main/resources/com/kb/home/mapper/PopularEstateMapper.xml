@@ -4,9 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kb.home.mapper.PopularEstateMapper">
     <select id="findTopWishedEstates" resultType="com.kb.home.dto.PopularEstateDTO">
-        SELECT e.address, e.tradetype, e.roomSize, e.floor, e.deposit, e.monthlyPee, SUBSTRING_INDEX(e.img, ',', 1) AS img, COUNT(ew.eno) AS wishCount
-        FROM EstateWish ew
-        JOIN Estate e ON ew.eno = e.eno
+        SELECT e.address, e.tradetype, e.roomSize, e.floor, e.deposit, e.monthlyPee, SUBSTRING_INDEX(e.img, ',', 1) AS img, COUNT(w.wished_id) AS wishCount
+        FROM Wish w
+        JOIN Estate e ON w.wished_id = e.eno
         GROUP BY e.eno, e.address, e.tradetype, e.roomSize, e.floor, e.deposit, e.monthlyPee, e.img
         ORDER BY wishCount DESC
         LIMIT 4  <!-- 상위 4개의 매물만 반환 -->
