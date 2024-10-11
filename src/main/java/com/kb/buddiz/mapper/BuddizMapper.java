@@ -15,7 +15,6 @@ public interface BuddizMapper {
     int updateBuddiz(Buddiz buddiz);
     int deleteBuddiz(long uno);
     int selectReviewCount(long uno);
-
     int insertWish(Buddiz buddiz);
     double selectReviewAvg(long uno);
 
