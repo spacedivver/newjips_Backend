@@ -42,7 +42,7 @@
         from ChatRoom c
                  join User u1 on (c.from_id = u1.uno)
                  join User u2 on (c.to_id = u2.uno)
-        where c.cno = #{ cno }
+        where c.cno = #{roomId}
     </select>
 
     <select id="checkChatRoomFromExist" parameterType="com.kb.chat.dto.ChatRoom" resultType="boolean">

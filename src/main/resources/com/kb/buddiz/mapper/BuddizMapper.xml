@@ -114,7 +114,8 @@
         select
             r.nickname as reviewer, r.reviewContent, r.createdAt, r.rating, r.profilePic
         from Review r
-        where r.uno = #{uno} ]]>
+        where r.uno = #{uno}
+        Order by r.createdAt DESC]]>
 
 <!--        <![CDATA[-->
 <!--        SELECT-->

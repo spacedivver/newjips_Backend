@@ -4,8 +4,10 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.kb.home.mapper.PopularBuddizMapper">
     <select id="findTopBuddiz" resultType="com.kb.home.dto.PopularBuddizDTO">
-        SELECT u.nickname, u.profilePic AS imgFile, ROUND(AVG(ub.rating), 2) AS averageRating
-        FROM User u JOIN UserBuddiz ub ON u.uno = ub.uno  JOIN Review r ON r.uno = ub.uno
+        SELECT u.uno, u.nickname, u.profilePic AS imgFile, ROUND(AVG(ub.rating), 2) AS averageRating
+        FROM User u
+        JOIN UserBuddiz ub ON u.uno = ub.uno
+        JOIN Review r ON r.uno = ub.uno
         GROUP BY u.uno, u.nickname, u.profilePic
         HAVING COUNT(r.uno) >= 10  <!-- 리뷰 개수가 10개 이상인 조건 -->
         ORDER BY averageRating DESC  <!-- 평균 별점 순으로 정렬 -->
