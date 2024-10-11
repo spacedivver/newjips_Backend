@@ -29,6 +29,7 @@ public class Member implements UserDetails {
     private Date modifyDate;    // 수정일
 
 
+
     private String token; // JWT 토큰값, DB로는 저장하지 않음
 
     // 복수개의 권한을 관리

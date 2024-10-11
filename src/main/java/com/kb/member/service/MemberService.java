@@ -51,6 +51,11 @@ public class MemberService{
         return member != null; //중복 확인
     }
 
+    public boolean isBuddiz(long uno){
+        Long member = mapper.findBuddiz(uno);
+        return member != null; //null이면 false, 있으면 true
+    }
+
     public Member getMember(String userId) {
         return Optional.ofNullable(mapper.selectById(userId))
                         .orElseThrow(NoSuchElementException::new);
