@@ -121,4 +121,13 @@ public class BuddizService {
         return buddiz;
     }
 
+    @Transactional
+    public boolean checkUnPicked(Buddiz buddiz) {
+        int result = mapper.checkPicked(buddiz);
+        if (result == 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
