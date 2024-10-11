@@ -37,8 +37,8 @@ public class BuddizService {
 
     public BuddizPageResult getBuddizList(BuddizParam buddizParam) {
         int totalSize = mapper.selectBuddizCount(buddizParam);
-        System.out.println(buddizParam);
-        System.out.println(totalSize);
+//        System.out.println(buddizParam);
+//        System.out.println(totalSize);
         PageInfo pageInfo = new PageInfo(buddizParam.getPage(), totalSize, LIST_LIMIT, PAGE_LIMIT);
         buddizParam.setLimit(pageInfo.getListLimit());
         buddizParam.setOffset(pageInfo.getStartList() - 1);

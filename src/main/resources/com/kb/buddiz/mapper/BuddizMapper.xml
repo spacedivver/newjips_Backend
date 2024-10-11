@@ -45,16 +45,17 @@
     <select id="selectBuddizList" parameterType="com.kb.buddiz.dto.BuddizParam" resultMap="buddizResultMap">
         <![CDATA[
     select
-        distinct ub.uno, u.name, ub.rating, ub.liveInKr, ub.personality, u.profilePic
+         ub.uno, u.name, ub.rating, ub.liveInKr, ub.personality, u.profilePic,
+         (select count(reviewContent) from Review r where ub.uno=r.uno) as reviewcnt
     from UserBuddiz ub
     left outer join User u on ub.uno = u.uno
      where 1=1  ]]>
 
-        <if test="searchType == 'M'">
+        <if test='searchType == "M"'>
             and u.gender = 'M'
         </if>
 
-        <if test="searchType == 'F'">
+        <if test='searchType == "F"'>
             and u.gender = 'F'
         </if>
 
@@ -69,7 +70,7 @@
                 ub.cost desc
             </when>
             <when test="sort == 'reviewcnt'">
-                ub.reviewcnt desc
+                reviewcnt desc
             </when>
             <otherwise>
                 ub.rating desc
@@ -82,17 +83,17 @@
     </select>
 
     <select id="selectBuddizCount" parameterType="com.kb.buddiz.dto.BuddizParam" resultType="int">
-        select count(distinct ub.uno)
+        select count(ub.uno)
         from UserBuddiz ub
         left outer join User u on ub.uno = u.uno
         where 1=1
 
-        <if test="searchType == 'M'">
-            and u.gender = 'M'
+        <if test='searchType == "M"'>
+            and u.gender = "M"
         </if>
 
-        <if test="searchType == 'F'">
-            and u.gender = 'F'
+        <if test='searchType == "F"'>
+            and u.gender = "F"
         </if>
 
         <if test="searchValue != null">
