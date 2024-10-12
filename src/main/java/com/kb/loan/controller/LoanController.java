@@ -21,6 +21,7 @@ public class LoanController {
     // Get all loans
     @GetMapping("/list")
     public List<LoanDTO> getLoanList() {
+
         return loanService.getLoanList();
     }
 

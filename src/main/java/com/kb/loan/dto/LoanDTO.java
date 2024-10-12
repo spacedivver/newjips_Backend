@@ -18,6 +18,6 @@ public class LoanDTO {
     private String howToRepay;
     private String loanLimit;
     private String interest;
-    private String loanGuid;
+    private String loanGuide;
     private String lan;
 }
