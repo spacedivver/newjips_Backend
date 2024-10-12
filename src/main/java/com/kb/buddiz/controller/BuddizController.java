@@ -30,6 +30,7 @@ public class BuddizController {
 
     @GetMapping("")
     public ResponseEntity<BuddizPageResult> getList(BuddizParam buddizParam) {
+        System.out.println(buddizParam);
         BuddizPageResult result = service.getBuddizList(buddizParam);
         return ResponseEntity.ok(result);
     }

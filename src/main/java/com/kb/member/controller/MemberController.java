@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -36,6 +37,12 @@ public class MemberController {
     public ResponseEntity<Member> get(@PathVariable String userId) {
         Member member = service.getMember(userId);
         return ResponseEntity.ok(member);
+    }
+
+    @GetMapping("/buddiz/{uno}")
+    public ResponseEntity<Boolean> get(@PathVariable long uno){
+        boolean member = service.isBuddiz(uno);
+            return ResponseEntity.ok(member);
     }
 
     @PostMapping("")

@@ -75,10 +75,16 @@
         WHERE id = #{id} AND authority = #{auth}
     </delete>
 
-
     <select id="selectByUno" resultType="com.kb.member.dto.Member" parameterType="long">
         SELECT uno, userId, password, name, nickname, gender, profilePic
         FROM User u
+        WHERE u.uno = #{uno}
+    </select>
+
+    <select id="findBuddiz" resultType="java.lang.Long" parameterType="long">
+        SELECT UB.uno
+        FROM User u
+            JOIN UserBuddiz AS UB ON u.uno = UB.uno
         WHERE u.uno = #{uno}
     </select>
 </mapper>
