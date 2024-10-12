@@ -45,7 +45,7 @@
     <select id="selectBuddizList" parameterType="com.kb.buddiz.dto.BuddizParam" resultMap="buddizResultMap">
         <![CDATA[
     select
-         ub.uno, u.name, ub.rating, ub.liveInKr, ub.personality, u.profilePic,
+         ub.uno, u.name, ub.rating as rating, ub.liveInKr, ub.personality, u.profilePic, ub.cost as cost,
          (select count(reviewContent) from Review r where ub.uno=r.uno) as reviewcnt,
          (SELECT AVG(r2.rating) as avg FROM Review r2 WHERE r2.uno = ub.uno) as avg
     from UserBuddiz ub
@@ -68,14 +68,14 @@
         order by
         <choose>
             <when test="sort == 'cost'">
-                ub.cost desc
+                cost desc
             </when>
             <when test="sort == 'reviewcnt'">
                 reviewcnt desc
             </when>
-            <otherwise>
-                ub.rating desc
-            </otherwise>
+            <when test="sort == 'rating'">
+                avg desc
+            </when>
         </choose>
 
 
