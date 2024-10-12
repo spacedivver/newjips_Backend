@@ -18,7 +18,7 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    // Get all loans
+    // Get all loans//
     @GetMapping("/list")
     public List<LoanDTO> getLoanList() {
 
