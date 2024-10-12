@@ -5,19 +5,26 @@
 
 <mapper namespace="com.kb.loan.mapper.LoanMapper">
 
-    <!-- Fetch all loans -->
-    <select id="getLoanList" resultType="com.kb.loan.dto.LoanDTO">
+    <!-- Fetch all loans based on language -->
+    <select id="getLoanList" parameterType="String" resultType="com.kb.loan.dto.LoanDTO">
         SELECT lno, bank, url, title, subtitle, content, period, howToRepay, loanLimit, interest, loanGuide, lan
         FROM Loan
+        WHERE lan = #{lan}
     </select>
 
     <!-- Fetch loan detail by lno -->
-    <select id="getLoanDetail" parameterType="Long" resultType="com.kb.loan.dto.LoanDTO">
+    <select id="getLoanDetail" parameterType="Map" resultType="com.kb.loan.dto.LoanDTO">
         SELECT lno, bank, url, title, subtitle, content, period, howToRepay, loanLimit, interest, loanGuide, lan
         FROM Loan
-        WHERE lno = #{lno}
+        WHERE lno = #{lno} AND lan = #{lan}
     </select>
 
+    <!-- Fetch top 3 loans based on language -->
+    <select id="getTopLoans" parameterType="String" resultType="com.kb.loan.dto.LoanDTO">
+        SELECT lno, bank, url, title, subtitle, content, period, howToRepay, loanLimit, interest, loanGuide, lan
+        FROM Loan
+        WHERE lan = #{lan}
+        ORDER BY lno DESC
+            LIMIT 3
+    </select>
 </mapper>
-
-

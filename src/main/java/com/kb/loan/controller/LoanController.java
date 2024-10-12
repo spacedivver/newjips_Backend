@@ -18,16 +18,21 @@ public class LoanController {
         this.loanService = loanService;
     }
 
-    // Get all loans//
+    // Get all loans by language
     @GetMapping("/list")
-    public List<LoanDTO> getLoanList() {
-
-        return loanService.getLoanList();
+    public List<LoanDTO> getLoanList(@RequestParam("lan") String lan) {
+        return loanService.getLoanList(lan);
     }
 
-    // Get loan by ID
+    // Get top 3 loans by language
+    @GetMapping("/top3")
+    public List<LoanDTO> getTopLoans(@RequestParam("lan") String lan) {
+        return loanService.getTopLoans(lan);
+    }
+
+    // Get loan by ID and language
     @GetMapping("/detail/{lno}")
-    public LoanDTO getLoanDetail(@PathVariable("lno") Long lno) {
-        return loanService.getLoanDetail(lno);
+    public LoanDTO getLoanDetail(@PathVariable("lno") Long lno, @RequestParam("lan") String lan) {
+        return loanService.getLoanDetail(lno, lan);
     }
 }
