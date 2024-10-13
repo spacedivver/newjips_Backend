@@ -13,3 +13,4 @@ public class EstateParam {
     private Double latitude;
     private Double longitude;
 }
+

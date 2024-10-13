@@ -11,5 +11,5 @@ public interface EstateMapper {
 
     EstateDetailDTO getEstateDetail(@Param("eno") Long eno);
 
-    List<EstateDTO> getEstateByLocation(@Param("latitude") Double latitude, @Param("longitude") Double longitude);
-;}
+    List<EstateDTO> getEstateByLocation(EstateParam estateParam);
+}
