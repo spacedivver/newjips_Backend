@@ -28,4 +28,10 @@ public class EstateDetailDTO {
     private String content;
     private String imgString;
     private List<String> img;
+    private Long ano;
+    private String businessName;
+    private String agentContact;
+    private String agentRegNum;
+    private String agentName;
+    private String agentLocation;
 }
