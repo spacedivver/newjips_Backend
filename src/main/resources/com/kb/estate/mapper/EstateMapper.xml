@@ -13,15 +13,18 @@
 
     <!-- 매물 상세 정보 -->
     <select id="getEstateDetail" parameterType="Long" resultType="com.kb.estate.dto.EstateDetailDTO">
-        SELECT eno, address, housetype, monthlyPee, tradetype, deposit, latitude, longitude, `option`, secOption,
-               floor, roomSize, distToSub, lan, mno, content, img AS imgString
-        FROM Estate
-        WHERE eno = #{eno}
+        SELECT e.eno, e.address, e.housetype, e.monthlyPee, e.tradetype, e.deposit, e.latitude, e.longitude, e.option, e.secOption,
+               e.floor, e.roomSize, e.distToSub, e.lan, e.mno, e.content, e.img AS imgString,
+               a.ano, a.businessName, a.agentContact, a.agentRegNum, a.agentName, a.agentLocation
+        FROM Estate AS e
+                 LEFT JOIN Agent AS a ON a.ano = e.mno AND a.lan = e.lan
+        WHERE e.eno = #{eno}
+            LIMIT 1
     </select>
-<!--    위치기반 매물 탐색 -->
-    <select id="getEstateByLocation" parameterType="Double" resultType="com.kb.estate.dto.EstateDTO">
+    <!-- 위치기반 매물 탐색 -->
+    <select id="getEstateByLocation" parameterType="com.kb.estate.dto.EstateParam" resultType="com.kb.estate.dto.EstateDTO">
     <![CDATA[
-        SELECT *
+        SELECT *, img AS imgString
         FROM (
                  SELECT *,
                         (6371 * acos(cos(radians(#{latitude}))
@@ -35,6 +38,5 @@
         ORDER BY distance;
         ]]>
 </select>
-
 
 </mapper>

@@ -39,7 +39,7 @@ public class EstateService {
 
         return estates;
     }
-    // 특정 매물의 상세 정보를 가져오는 서비스 메서드
+
     // 특정 매물의 상세 정보를 가져오는 서비스 메서드
     public EstateDetailDTO getEstateDetail(Long eno) {
         EstateDetailDTO estateDetail = estateMapper.getEstateDetail(eno);
@@ -57,7 +57,18 @@ public class EstateService {
     }
 
     public List<EstateDTO> getEstateByLocation(EstateParam estateParam) {
-        return estateMapper.getEstateByLocation(estateParam.getLatitude(), estateParam.getLongitude());
-    }
+        List<EstateDTO> estates = estateMapper.getEstateByLocation(estateParam); // Pass estateParam as a single object
 
+        // 이미지 URL 리스트 변환 및 설정
+        for (EstateDTO estate : estates) {
+            String imgString = estate.getImgString();
+            if (imgString != null) {
+                List<String> imgList = Arrays.asList(imgString.split(","));
+                estate.setImg(imgList);
+            } else {
+                estate.setImg(new ArrayList<>());
+            }
+        }
+        return estates;
+    }
 }
