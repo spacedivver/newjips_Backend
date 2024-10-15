@@ -13,7 +13,7 @@ public class ExchangeRateService {
     @Autowired
     private ExchangeRateMapper exchangeRateMapper;
 
-    private static final String API_KEY = "GtgqT7SHEyLIIWG9Di1JgmcrZ0DZbxs2";
+    private static final String API_KEY = "ghDJfZxc9SxlA63MGXGK1WebuKEbSQRK";
     private static final String EXCHANGE_RATE_API_URL = "https://api.apilayer.com/fixer/latest";
 
     public String getExchangeRate(String symbols, String base) {
